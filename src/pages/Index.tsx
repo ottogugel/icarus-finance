@@ -13,26 +13,19 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="border-b bg-card/50 backdrop-blur-sm sticky top-0 z-10">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-primary-foreground">
-                <Wallet className="h-6 w-6" />
-              </div>
-              <div>
-                <h1 className="text-xl font-bold">Controle Financeiro</h1>
-                <p className="text-sm text-muted-foreground">Gerencie suas finanças</p>
-              </div>
+      <div className="container mx-auto px-4 py-8">
+        <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center gap-3">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary text-primary-foreground">
+              <Wallet className="h-6 w-6" />
             </div>
-            <AddTransactionDialog onAdd={addTransaction} />
+            <div>
+              <h1 className="text-3xl font-bold">Dashboard</h1>
+              <p className="text-muted-foreground">Visão geral das suas finanças</p>
+            </div>
           </div>
+          <AddTransactionDialog onAdd={addTransaction} />
         </div>
-      </header>
-
-      {/* Main Content */}
-      <main className="container mx-auto px-4 py-8">
         {/* Stats Cards */}
         <div className="grid gap-4 md:grid-cols-3 mb-8">
           <StatsCard title="Saldo Total" value={stats.balance} icon={Wallet} variant="default" />
@@ -66,7 +59,7 @@ const Index = () => {
             <TransactionList transactions={transactions} onDelete={deleteTransaction} />
           </div>
         </div>
-      </main>
+      </div>
     </div>
   );
 };
