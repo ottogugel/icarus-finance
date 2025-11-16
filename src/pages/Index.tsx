@@ -1,12 +1,15 @@
 import { useTransactions } from '@/hooks/useTransactions';
+import { useGoals } from '@/hooks/useGoals';
 import { StatsCard } from '@/components/StatsCard';
 import { TransactionList } from '@/components/TransactionList';
 import { AddTransactionDialog } from '@/components/AddTransactionDialog';
 import { CategoryChart } from '@/components/CategoryChart';
+import { GoalsList } from '@/components/GoalsList';
 import { Wallet, TrendingUp, TrendingDown } from 'lucide-react';
 
 const Index = () => {
   const { transactions, addTransaction, deleteTransaction, stats } = useTransactions();
+  const { goals, addGoal, deleteGoal } = useGoals();
 
   return (
     <div className="min-h-screen bg-background">
@@ -35,6 +38,16 @@ const Index = () => {
           <StatsCard title="Saldo Total" value={stats.balance} icon={Wallet} variant="default" />
           <StatsCard title="Receitas" value={stats.income} icon={TrendingUp} variant="success" />
           <StatsCard title="Despesas" value={stats.expenses} icon={TrendingDown} variant="danger" />
+        </div>
+
+        {/* Goals Section */}
+        <div className="mb-8">
+          <GoalsList 
+            goals={goals}
+            transactions={transactions}
+            onAddGoal={addGoal}
+            onDeleteGoal={deleteGoal}
+          />
         </div>
 
         {/* Chart and Transactions */}
