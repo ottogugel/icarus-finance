@@ -2,29 +2,25 @@ import { useTransactions } from '@/hooks/useTransactions';
 import { useGoals } from '@/hooks/useGoals';
 import { StatsCard } from '@/components/StatsCard';
 import { TransactionList } from '@/components/TransactionList';
-import { AddTransactionDialog } from '@/components/AddTransactionDialog';
 import { CategoryChart } from '@/components/CategoryChart';
 import { GoalsList } from '@/components/GoalsList';
 import { Wallet, TrendingUp, TrendingDown } from 'lucide-react';
 
 const Index = () => {
-  const { transactions, addTransaction, deleteTransaction, stats } = useTransactions();
+  const { transactions, deleteTransaction, stats } = useTransactions();
   const { goals, addGoal, deleteGoal } = useGoals();
 
   return (
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-8">
-        <div className="flex items-center justify-between mb-8">
-          <div className="flex items-center gap-3">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary text-primary-foreground">
-              <Wallet className="h-6 w-6" />
-            </div>
-            <div>
-              <h1 className="text-3xl font-bold">Dashboard</h1>
-              <p className="text-muted-foreground">Visão geral das suas finanças</p>
-            </div>
+        <div className="flex items-center gap-3 mb-8">
+          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary text-primary-foreground">
+            <Wallet className="h-6 w-6" />
           </div>
-          <AddTransactionDialog onAdd={addTransaction} />
+          <div>
+            <h1 className="text-3xl font-bold">Dashboard</h1>
+            <p className="text-muted-foreground">Visão geral das suas finanças</p>
+          </div>
         </div>
         {/* Stats Cards */}
         <div className="grid gap-4 md:grid-cols-3 mb-8">
