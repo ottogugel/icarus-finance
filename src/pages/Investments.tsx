@@ -1,5 +1,6 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { TrendingUp, Wallet, PiggyBank, BarChart3 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { TrendingUp, Wallet, PiggyBank, BarChart3, Plus } from 'lucide-react';
 
 const Investments = () => {
   const investmentTypes = [
@@ -32,9 +33,15 @@ const Investments = () => {
   return (
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold">Investimentos</h1>
-          <p className="text-muted-foreground">Acompanhe sua carteira de investimentos</p>
+        <div className="mb-8 flex justify-between items-start">
+          <div>
+            <h1 className="text-3xl font-bold">Investimentos</h1>
+            <p className="text-muted-foreground">Acompanhe sua carteira de investimentos</p>
+          </div>
+          <Button>
+            <Plus className="mr-2 h-4 w-4" />
+            Novo Investimento
+          </Button>
         </div>
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 mb-8">
