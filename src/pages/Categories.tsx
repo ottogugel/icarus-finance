@@ -29,7 +29,7 @@ export default function Categories() {
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [editingCategory, setEditingCategory] = useState<any>(null);
-  
+
   const [newName, setNewName] = useState('');
   const [newType, setNewType] = useState<TransactionType>('expense');
   const [newIcon, setNewIcon] = useState('');
@@ -39,7 +39,7 @@ export default function Categories() {
       toast.error('Digite um nome para a categoria');
       return;
     }
-    
+
     addCategory(newName, newType, newIcon);
     setNewName('');
     setNewType('expense');
@@ -53,7 +53,7 @@ export default function Categories() {
       toast.error('Digite um nome para a categoria');
       return;
     }
-    
+
     updateCategory(editingCategory.id, newName, newIcon);
     setEditingCategory(null);
     setNewName('');
@@ -88,7 +88,7 @@ export default function Categories() {
             Gerencie suas categorias de receitas e despesas
           </p>
         </div>
-        
+
         <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
           <DialogTrigger asChild>
             <Button>
@@ -103,7 +103,7 @@ export default function Categories() {
                 Crie uma nova categoria para organizar suas transações
               </DialogDescription>
             </DialogHeader>
-            
+
             <div className="space-y-4 py-4">
               <div className="space-y-2">
                 <Label htmlFor="name">Nome</Label>
@@ -114,7 +114,7 @@ export default function Categories() {
                   onChange={(e) => setNewName(e.target.value)}
                 />
               </div>
-              
+
               <div className="space-y-2">
                 <Label htmlFor="type">Tipo</Label>
                 <Select value={newType} onValueChange={(value) => setNewType(value as TransactionType)}>
@@ -127,7 +127,7 @@ export default function Categories() {
                   </SelectContent>
                 </Select>
               </div>
-              
+
               <div className="space-y-2">
                 <Label htmlFor="icon">Ícone (opcional)</Label>
                 <Input
@@ -139,7 +139,7 @@ export default function Categories() {
                 />
               </div>
             </div>
-            
+
             <DialogFooter>
               <Button variant="outline" onClick={() => setIsAddOpen(false)}>
                 Cancelar
@@ -158,7 +158,7 @@ export default function Categories() {
             <h2 className="text-xl font-semibold text-foreground">Receitas</h2>
             <span className="text-sm text-muted-foreground">({incomeCategories.length})</span>
           </div>
-          
+
           <div className="space-y-2">
             {incomeCategories.map((category) => (
               <Card key={category.id} className="p-4 hover:shadow-md transition-shadow">
@@ -167,7 +167,7 @@ export default function Categories() {
                     {category.icon && <span className="text-2xl">{category.icon}</span>}
                     <span className="font-medium text-foreground">{category.name}</span>
                   </div>
-                  
+
                   <div className="flex gap-2">
                     <Button
                       variant="ghost"
@@ -187,7 +187,7 @@ export default function Categories() {
                 </div>
               </Card>
             ))}
-            
+
             {incomeCategories.length === 0 && (
               <p className="text-center text-muted-foreground py-8">
                 Nenhuma categoria de receita cadastrada
@@ -203,7 +203,7 @@ export default function Categories() {
             <h2 className="text-xl font-semibold text-foreground">Despesas</h2>
             <span className="text-sm text-muted-foreground">({expenseCategories.length})</span>
           </div>
-          
+
           <div className="space-y-2">
             {expenseCategories.map((category) => (
               <Card key={category.id} className="p-4 hover:shadow-md transition-shadow">
@@ -212,7 +212,7 @@ export default function Categories() {
                     {category.icon && <span className="text-2xl">{category.icon}</span>}
                     <span className="font-medium text-foreground">{category.name}</span>
                   </div>
-                  
+
                   <div className="flex gap-2">
                     <Button
                       variant="ghost"
@@ -232,7 +232,7 @@ export default function Categories() {
                 </div>
               </Card>
             ))}
-            
+
             {expenseCategories.length === 0 && (
               <p className="text-center text-muted-foreground py-8">
                 Nenhuma categoria de despesa cadastrada
@@ -251,7 +251,7 @@ export default function Categories() {
               Atualize as informações da categoria
             </DialogDescription>
           </DialogHeader>
-          
+
           <div className="space-y-4 py-4">
             <div className="space-y-2">
               <Label htmlFor="edit-name">Nome</Label>
@@ -261,7 +261,7 @@ export default function Categories() {
                 onChange={(e) => setNewName(e.target.value)}
               />
             </div>
-            
+
             <div className="space-y-2">
               <Label htmlFor="edit-icon">Ícone (opcional)</Label>
               <Input
@@ -273,7 +273,7 @@ export default function Categories() {
               />
             </div>
           </div>
-          
+
           <DialogFooter>
             <Button variant="outline" onClick={() => setIsEditOpen(false)}>
               Cancelar
