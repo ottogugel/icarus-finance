@@ -1,4 +1,4 @@
-import { LayoutDashboard, Receipt, TrendingUp, Tag } from "lucide-react";
+import { LayoutDashboard, Receipt, TrendingUp, Tag, Settings } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useLocation } from "react-router-dom";
 
@@ -19,6 +19,7 @@ const items = [
   { title: "Transações", url: "/transactions", icon: Receipt },
   { title: "Investimentos", url: "/investments", icon: TrendingUp },
   { title: "Categorias", url: "/categories", icon: Tag },
+  { title: "Configurações", url: "/settings", icon: Settings },
 ];
 
 export function AppSidebar() {

@@ -9,6 +9,7 @@ import Index from "./pages/Index";
 import Transactions from "./pages/Transactions";
 import Investments from "./pages/Investments";
 import Categories from "./pages/Categories";
+import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 import Layout from "./Layout";
 import Auth from "./pages/Auth";
@@ -28,6 +29,7 @@ const App = () => (
             <Route path="/transactions" element={<Transactions />} />
             <Route path="/investments" element={<Investments />} />
             <Route path="/categories" element={<Categories />} />
+            <Route path="/settings" element={<Settings />} />
           </Route>
           {/* 404*/}
           <Route path="*" element={<NotFound />} />
