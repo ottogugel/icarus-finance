@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { useTransactions } from '@/hooks/useTransactions';
+import { useSupabaseTransactions } from '@/hooks/useSupabaseTransactions';
 import { TransactionList } from '@/components/TransactionList';
 import { AddTransactionDialog } from '@/components/AddTransactionDialog';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Category, categoryLabels, formatCurrency, TransactionType } from '@/lib/finance';
 
 const Transactions = () => {
-  const { transactions, addTransaction, deleteTransaction, stats } = useTransactions();
+  const { transactions, addTransaction, deleteTransaction, stats, loading } = useSupabaseTransactions();
   const [filterType, setFilterType] = useState<'all' | TransactionType>('all');
   const [filterCategory, setFilterCategory] = useState<'all' | Category>('all');
 
@@ -47,6 +47,13 @@ const Transactions = () => {
             </div>
             <AddTransactionDialog onAdd={addTransaction} />
           </div>
+
+          {loading ? (
+            <div className="flex items-center justify-center py-12">
+              <div className="text-lg">Carregando transações...</div>
+            </div>
+          ) : (
+            <>
 
           {/* Stats Cards */}
           <div className="grid gap-4 md:grid-cols-3 mb-6">
@@ -128,10 +135,12 @@ const Transactions = () => {
               </div>
             </CardContent>
           </Card>
-        </div>
 
-        {/* Transactions List */}
-        <TransactionList transactions={filteredTransactions} onDelete={deleteTransaction} />
+          {/* Transactions List */}
+          <TransactionList transactions={filteredTransactions} onDelete={deleteTransaction} />
+          </>
+          )}
+        </div>
       </div>
     </div>
   );

@@ -11,15 +11,28 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Tabs, TabsContent } from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Login from "@/assets/lottie/login.json";
 import Lottie from "lottie-react";
+import { supabase } from "@/integrations/supabase/client";
+
 export default function Auth() {
   const navigate = useNavigate();
 
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+
+  // Check if user is already logged in
+  useEffect(() => {
+    const checkUser = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        navigate("/");
+      }
+    };
+    checkUser();
+  }, [navigate]);
 
   // -------------------------
   // LOGIN
@@ -34,12 +47,20 @@ export default function Auth() {
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
 
-    // simulação...
-    setTimeout(() => {
-      setSuccess("Login realizado!");
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (error) {
+      setError(error.message);
       setIsLoading(false);
-      navigate("/");
-    }, 1200);
+      return;
+    }
+
+    setSuccess("Login realizado!");
+    setIsLoading(false);
+    navigate("/");
   };
 
   // -------------------------
@@ -52,7 +73,6 @@ export default function Auth() {
     setSuccess(null);
 
     const formData = new FormData(e.currentTarget);
-    const name = formData.get("name") as string;
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
     const confirmPassword = formData.get("confirmPassword") as string;
@@ -69,10 +89,24 @@ export default function Auth() {
       return;
     }
 
-    setTimeout(() => {
-      setSuccess("Conta criada com sucesso!");
+    const redirectUrl = `${window.location.origin}/`;
+
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        emailRedirectTo: redirectUrl,
+      },
+    });
+
+    if (error) {
+      setError(error.message);
       setIsLoading(false);
-    }, 1200);
+      return;
+    }
+
+    setSuccess("Conta criada com sucesso! Verifique seu email.");
+    setIsLoading(false);
   };
 
   // -------------------------
@@ -122,6 +156,11 @@ export default function Auth() {
 
             <CardContent className="space-y-6">
               <Tabs defaultValue="signin" className="w-full">
+                <TabsList className="grid w-full grid-cols-2">
+                  <TabsTrigger value="signin">Entrar</TabsTrigger>
+                  <TabsTrigger value="signup">Criar Conta</TabsTrigger>
+                </TabsList>
+
                 {/* LOGIN */}
                 <TabsContent value="signin" className="space-y-4">
                   <form onSubmit={handleSignIn} className="space-y-4">
@@ -160,17 +199,6 @@ export default function Auth() {
                 {/* SIGNUP */}
                 <TabsContent value="signup" className="space-y-4">
                   <form onSubmit={handleSignUp} className="space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="signup-name">Nome</Label>
-                      <Input
-                        id="signup-name"
-                        name="name"
-                        type="text"
-                        required
-                        disabled={isLoading}
-                      />
-                    </div>
-
                     <div className="space-y-2">
                       <Label htmlFor="signup-email">Email</Label>
                       <Input
@@ -215,8 +243,16 @@ export default function Auth() {
                 </TabsContent>
               </Tabs>
 
-              {error && <Alert variant="destructive">{error}</Alert>}
-              {success && <Alert>{success}</Alert>}
+              {error && (
+                <Alert variant="destructive">
+                  <AlertDescription>{error}</AlertDescription>
+                </Alert>
+              )}
+              {success && (
+                <Alert>
+                  <AlertDescription>{success}</AlertDescription>
+                </Alert>
+              )}
             </CardContent>
           </Card>
         </div>
