@@ -1,16 +1,13 @@
 import { useSupabaseTransactions } from '@/hooks/useSupabaseTransactions';
-import { useSupabaseGoals } from '@/hooks/useSupabaseGoals';
 import { StatsCard } from '@/components/StatsCard';
 import { TransactionList } from '@/components/TransactionList';
 import { CategoryChart } from '@/components/CategoryChart';
-import { GoalsList } from '@/components/GoalsList';
 import { Wallet, TrendingUp, TrendingDown } from 'lucide-react';
 
 const Index = () => {
   const { transactions, deleteTransaction, stats, loading: transactionsLoading } = useSupabaseTransactions();
-  const { goals, addGoal, deleteGoal, loading: goalsLoading } = useSupabaseGoals();
 
-  if (transactionsLoading || goalsLoading) {
+  if (transactionsLoading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-lg">Carregando dados...</div>
@@ -35,16 +32,6 @@ const Index = () => {
           <StatsCard title="Saldo Total" value={stats.balance} icon={Wallet} variant="default" />
           <StatsCard title="Receitas" value={stats.income} icon={TrendingUp} variant="success" />
           <StatsCard title="Despesas" value={stats.expenses} icon={TrendingDown} variant="danger" />
-        </div>
-
-        {/* Goals Section */}
-        <div className="mb-8">
-          <GoalsList 
-            goals={goals}
-            transactions={transactions}
-            onAddGoal={addGoal}
-            onDeleteGoal={deleteGoal}
-          />
         </div>
 
         {/* Chart and Transactions */}

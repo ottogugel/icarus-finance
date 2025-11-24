@@ -9,6 +9,7 @@ import Index from "./pages/Index";
 import Transactions from "./pages/Transactions";
 import Investments from "./pages/Investments";
 import Categories from "./pages/Categories";
+import Goals from "./pages/Goals";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 import Layout from "./Layout";
@@ -29,6 +30,7 @@ const App = () => (
             <Route path="/transactions" element={<Transactions />} />
             <Route path="/investments" element={<Investments />} />
             <Route path="/categories" element={<Categories />} />
+            <Route path="/goals" element={<Goals />} />
             <Route path="/settings" element={<Settings />} />
           </Route>
           {/* 404*/}
