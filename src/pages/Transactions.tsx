@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react';
 import { useSupabaseTransactions } from '@/hooks/useSupabaseTransactions';
+import { useSupabaseBanks } from '@/hooks/useSupabaseBanks';
 import { TransactionList } from '@/components/TransactionList';
 import { AddTransactionDialog } from '@/components/AddTransactionDialog';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -9,6 +10,7 @@ import { Category, categoryLabels, formatCurrency, TransactionType } from '@/lib
 
 const Transactions = () => {
   const { transactions, addTransaction, deleteTransaction, stats, loading } = useSupabaseTransactions();
+  const { banks } = useSupabaseBanks();
   const [filterType, setFilterType] = useState<'all' | TransactionType>('all');
   const [filterCategory, setFilterCategory] = useState<'all' | Category>('all');
 
@@ -45,7 +47,7 @@ const Transactions = () => {
               <h1 className="text-3xl font-bold">Transações</h1>
               <p className="text-muted-foreground">Gerencie todas as suas transações</p>
             </div>
-            <AddTransactionDialog onAdd={addTransaction} />
+            <AddTransactionDialog onAdd={addTransaction} banks={banks} />
           </div>
 
           {loading ? (

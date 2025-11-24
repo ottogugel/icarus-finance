@@ -10,6 +10,7 @@ import Transactions from "./pages/Transactions";
 import Investments from "./pages/Investments";
 import Categories from "./pages/Categories";
 import Goals from "./pages/Goals";
+import Banks from "./pages/Banks";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 import Layout from "./Layout";
@@ -28,6 +29,7 @@ const App = () => (
           <Route element={<Layout />}>
             <Route path="/" element={<Index />} />
             <Route path="/transactions" element={<Transactions />} />
+            <Route path="/banks" element={<Banks />} />
             <Route path="/investments" element={<Investments />} />
             <Route path="/categories" element={<Categories />} />
             <Route path="/goals" element={<Goals />} />
