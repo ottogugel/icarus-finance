@@ -8,10 +8,11 @@ import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Settings as SettingsIcon, User, Palette, Info } from 'lucide-react';
 import { toast } from 'sonner';
+import { useTheme } from 'next-themes';
 
 export default function Settings() {
   const { user } = useAuth();
-  const [darkMode, setDarkMode] = useState(false);
+  const { theme, setTheme } = useTheme();
   const [notifications, setNotifications] = useState(true);
   const [emailUpdates, setEmailUpdates] = useState(false);
 
@@ -134,8 +135,8 @@ export default function Settings() {
                   </div>
                   <Switch
                     id="dark-mode"
-                    checked={darkMode}
-                    onCheckedChange={setDarkMode}
+                    checked={theme === 'dark'}
+                    onCheckedChange={(checked) => setTheme(checked ? 'dark' : 'light')}
                   />
                 </div>
               </CardContent>
