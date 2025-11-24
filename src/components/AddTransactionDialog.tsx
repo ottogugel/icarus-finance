@@ -7,18 +7,21 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { TransactionType, Category, incomeCategories, expenseCategories, categoryLabels } from '@/lib/finance';
 import { Plus } from 'lucide-react';
 import { toast } from 'sonner';
+import { Bank } from '@/hooks/useSupabaseBanks';
 
 interface AddTransactionDialogProps {
-  onAdd: (description: string, amount: number, type: TransactionType, category: Category, date: Date) => void;
+  onAdd: (description: string, amount: number, type: TransactionType, category: Category, date: Date, bankId?: string) => void;
+  banks?: Bank[];
 }
 
-export function AddTransactionDialog({ onAdd }: AddTransactionDialogProps) {
+export function AddTransactionDialog({ onAdd, banks = [] }: AddTransactionDialogProps) {
   const [open, setOpen] = useState(false);
   const [description, setDescription] = useState('');
   const [amount, setAmount] = useState('');
   const [type, setType] = useState<TransactionType>('expense');
   const [category, setCategory] = useState<Category>('food');
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
+  const [bankId, setBankId] = useState<string>('');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,7 +37,7 @@ export function AddTransactionDialog({ onAdd }: AddTransactionDialogProps) {
       return;
     }
 
-    onAdd(description, parsedAmount, type, category, new Date(date));
+    onAdd(description, parsedAmount, type, category, new Date(date), bankId || undefined);
     
     // Reset form
     setDescription('');
@@ -42,6 +45,7 @@ export function AddTransactionDialog({ onAdd }: AddTransactionDialogProps) {
     setType('expense');
     setCategory('food');
     setDate(new Date().toISOString().split('T')[0]);
+    setBankId('');
     setOpen(false);
     
     toast.success('Transação adicionada!');
@@ -122,6 +126,25 @@ export function AddTransactionDialog({ onAdd }: AddTransactionDialogProps) {
               onChange={(e) => setDate(e.target.value)}
             />
           </div>
+
+          {banks.length > 0 && (
+            <div className="space-y-2">
+              <Label htmlFor="bank">Banco (opcional)</Label>
+              <Select value={bankId} onValueChange={setBankId}>
+                <SelectTrigger id="bank">
+                  <SelectValue placeholder="Selecione um banco" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="">Nenhum</SelectItem>
+                  {banks.map((bank) => (
+                    <SelectItem key={bank.id} value={bank.id}>
+                      {bank.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
 
           <Button type="submit" className="w-full">
             Adicionar

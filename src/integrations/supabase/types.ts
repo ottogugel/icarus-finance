@@ -14,6 +14,39 @@ export type Database = {
   }
   public: {
     Tables: {
+      banks: {
+        Row: {
+          color: string
+          created_at: string
+          icon: string | null
+          id: string
+          initial_balance: number
+          name: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          color?: string
+          created_at?: string
+          icon?: string | null
+          id?: string
+          initial_balance?: number
+          name: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          color?: string
+          created_at?: string
+          icon?: string | null
+          id?: string
+          initial_balance?: number
+          name?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       categories: {
         Row: {
           created_at: string
@@ -108,6 +141,7 @@ export type Database = {
       transactions: {
         Row: {
           amount: number
+          bank_id: string | null
           category: string
           created_at: string
           date: string
@@ -118,6 +152,7 @@ export type Database = {
         }
         Insert: {
           amount: number
+          bank_id?: string | null
           category: string
           created_at?: string
           date: string
@@ -128,6 +163,7 @@ export type Database = {
         }
         Update: {
           amount?: number
+          bank_id?: string | null
           category?: string
           created_at?: string
           date?: string
@@ -137,6 +173,13 @@ export type Database = {
           user_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "transactions_bank_id_fkey"
+            columns: ["bank_id"]
+            isOneToOne: false
+            referencedRelation: "banks"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "transactions_user_id_fkey"
             columns: ["user_id"]

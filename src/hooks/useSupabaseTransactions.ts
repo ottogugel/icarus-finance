@@ -74,7 +74,8 @@ export function useSupabaseTransactions() {
     amount: number,
     type: TransactionType,
     category: Category,
-    date: Date
+    date: Date,
+    bankId?: string
   ) => {
     if (!user) {
       toast.error('Você precisa estar logado');
@@ -88,6 +89,7 @@ export function useSupabaseTransactions() {
       type,
       category,
       date: date.toISOString(),
+      bank_id: bankId || null,
     });
 
     if (error) {
