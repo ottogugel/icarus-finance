@@ -37,7 +37,12 @@ export function AddTransactionDialog({ onAdd, banks = [] }: AddTransactionDialog
       return;
     }
 
-    onAdd(description, parsedAmount, type, category, new Date(date), bankId || undefined);
+    if (!bankId) {
+      toast.error('Selecione um banco');
+      return;
+    }
+
+    onAdd(description, parsedAmount, type, category, new Date(date), bankId);
     
     // Reset form
     setDescription('');
@@ -127,15 +132,14 @@ export function AddTransactionDialog({ onAdd, banks = [] }: AddTransactionDialog
             />
           </div>
 
-          {banks.length > 0 && (
+          {banks.length > 0 ? (
             <div className="space-y-2">
-              <Label htmlFor="bank">Banco (opcional)</Label>
+              <Label htmlFor="bank">Banco</Label>
               <Select value={bankId} onValueChange={setBankId}>
                 <SelectTrigger id="bank">
                   <SelectValue placeholder="Selecione um banco" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">Nenhum</SelectItem>
                   {banks.map((bank) => (
                     <SelectItem key={bank.id} value={bank.id}>
                       {bank.name}
@@ -144,9 +148,13 @@ export function AddTransactionDialog({ onAdd, banks = [] }: AddTransactionDialog
                 </SelectContent>
               </Select>
             </div>
+          ) : (
+            <div className="text-sm text-muted-foreground p-4 bg-muted rounded-md">
+              Você precisa criar um banco primeiro para adicionar transações.
+            </div>
           )}
 
-          <Button type="submit" className="w-full">
+          <Button type="submit" className="w-full" disabled={banks.length === 0}>
             Adicionar
           </Button>
         </form>
