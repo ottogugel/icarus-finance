@@ -88,10 +88,10 @@ export function AIChatAssistant() {
     }
   };
 
-  const handleSend = async () => {
-    if (!input.trim() || isLoading) return;
+  const sendMessage = async (text: string) => {
+    if (!text.trim() || isLoading) return;
 
-    const userMessage: Message = { role: "user", content: input.trim() };
+    const userMessage: Message = { role: "user", content: text.trim() };
     const newMessages = [...messages, userMessage];
     setMessages(newMessages);
     setInput("");
@@ -108,6 +108,8 @@ export function AIChatAssistant() {
       setIsLoading(false);
     }
   };
+
+  const handleSend = () => sendMessage(input);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && !e.shiftKey) {
@@ -153,11 +155,29 @@ export function AIChatAssistant() {
 
           {/* Messages */}
           <ScrollArea className="flex-1 p-4" ref={scrollRef}>
-            {messages.length === 0 ? (
-              <div className="text-center text-muted-foreground py-8">
-                <Bot className="h-12 w-12 mx-auto mb-3 opacity-50" />
-                <p className="text-sm">Olá! Sou seu assistente financeiro.</p>
-                <p className="text-xs mt-1">Como posso ajudar você hoje?</p>
+          {messages.length === 0 ? (
+              <div className="text-center py-6">
+                <Bot className="h-10 w-10 mx-auto mb-3 text-primary opacity-70" />
+                <p className="text-sm font-medium">Olá! Sou seu assistente financeiro.</p>
+                <p className="text-xs text-muted-foreground mt-1 mb-4">Como posso ajudar você hoje?</p>
+                <div className="flex flex-col gap-2 px-2">
+                  {[
+                    "Quais foram minhas despesas nesse mês?",
+                    "Quanto recebi no mês passado?",
+                    "Quanto está a fatura do meu cartão?",
+                    "Como posso economizar mais?",
+                  ].map((suggestion) => (
+                    <Button
+                      key={suggestion}
+                      variant="outline"
+                      size="sm"
+                      className="text-xs justify-start h-auto py-2 px-3 whitespace-normal text-left"
+                      onClick={() => sendMessage(suggestion)}
+                    >
+                      {suggestion}
+                    </Button>
+                  ))}
+                </div>
               </div>
             ) : (
               <div className="space-y-4">
