@@ -4,6 +4,7 @@ import { LogOut, UserCircle } from "lucide-react";
 import { Outlet, Navigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
+import { AIChatAssistant } from "@/components/AIChatAssistant";
 
 export default function Layout() {
   const { user, loading, signOut } = useAuth();
@@ -47,6 +48,7 @@ export default function Layout() {
             <Outlet />
           </main>
         </div>
+        <AIChatAssistant />
       </div>
     </SidebarProvider>
   );
