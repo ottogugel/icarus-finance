@@ -83,16 +83,6 @@ export default function Settings() {
                       placeholder="Seu nome"
                     />
                   </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="phone">Telefone</Label>
-                    <Input
-                      id="phone"
-                      type="tel"
-                      placeholder="(00) 00000-0000"
-                    />
-                  </div>
-
                   <Button type="submit">Salvar Alterações</Button>
                 </form>
               </CardContent>
@@ -106,9 +96,6 @@ export default function Settings() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                <Button variant="outline" className="w-full">
-                  Alterar Senha
-                </Button>
                 <Button variant="outline" className="w-full text-destructive">
                   Excluir Conta
                 </Button>
@@ -142,7 +129,7 @@ export default function Settings() {
               </CardContent>
             </Card>
 
-            <Card>
+            {/* <Card>
               <CardHeader>
                 <CardTitle>Notificações</CardTitle>
                 <CardDescription>
@@ -178,7 +165,7 @@ export default function Settings() {
                   />
                 </div>
               </CardContent>
-            </Card>
+            </Card> */}
 
             <Card>
               <CardHeader>
@@ -223,13 +210,13 @@ export default function Settings() {
               <CardContent className="space-y-4">
                 <div className="space-y-2">
                   <Label>Versão</Label>
-                  <p className="text-sm text-muted-foreground">1.0.0</p>
+                  <p className="text-sm text-muted-foreground">1.0.3</p>
                 </div>
 
                 <div className="space-y-2">
                   <Label>Descrição</Label>
                   <p className="text-sm text-muted-foreground">
-                    Finance Tracker é um aplicativo completo para gerenciamento de finanças pessoais. 
+                    Finance Tracker é um aplicativo completo para gerenciamento de finanças pessoais.
                     Acompanhe suas receitas, despesas, metas financeiras e investimentos em um só lugar.
                   </p>
                 </div>
@@ -248,7 +235,7 @@ export default function Settings() {
               </CardContent>
             </Card>
 
-            <Card>
+            {/* <Card>
               <CardHeader>
                 <CardTitle>Suporte</CardTitle>
                 <CardDescription>
@@ -266,7 +253,7 @@ export default function Settings() {
                   Termos de Uso
                 </Button>
               </CardContent>
-            </Card>
+            </Card> */}
           </TabsContent>
         </Tabs>
       </div>
