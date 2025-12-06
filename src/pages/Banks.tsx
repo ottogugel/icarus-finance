@@ -1,12 +1,21 @@
-import { useSupabaseBanks } from '@/hooks/useSupabaseBanks';
+import { useState } from 'react';
+import { useSupabaseBanks, Bank } from '@/hooks/useSupabaseBanks';
 import { useSupabaseTransactions } from '@/hooks/useSupabaseTransactions';
 import { BankCard } from '@/components/BankCard';
 import { AddBankDialog } from '@/components/AddBankDialog';
+import { EditBankDialog } from '@/components/EditBankDialog';
 import { Building2 } from 'lucide-react';
 
 export default function Banks() {
-  const { banks, addBank, deleteBank, calculateBankBalance, loading: banksLoading } = useSupabaseBanks();
+  const { banks, addBank, updateBank, deleteBank, calculateBankBalance, loading: banksLoading } = useSupabaseBanks();
   const { transactions, loading: transactionsLoading } = useSupabaseTransactions();
+  const [editingBank, setEditingBank] = useState<Bank | null>(null);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+
+  const handleEdit = (bank: Bank) => {
+    setEditingBank(bank);
+    setEditDialogOpen(true);
+  };
 
   if (banksLoading || transactionsLoading) {
     return (
@@ -48,11 +57,19 @@ export default function Banks() {
                 bank={bank}
                 currentBalance={calculateBankBalance(bank, transactions)}
                 onDelete={deleteBank}
+                onEdit={handleEdit}
               />
             ))}
           </div>
         )}
       </div>
+
+      <EditBankDialog
+        bank={editingBank}
+        open={editDialogOpen}
+        onOpenChange={setEditDialogOpen}
+        onUpdate={updateBank}
+      />
     </div>
   );
 }
