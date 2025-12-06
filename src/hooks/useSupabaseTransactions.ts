@@ -63,6 +63,7 @@ export function useSupabaseTransactions() {
       type: t.type as TransactionType,
       category: t.category as Category,
       date: new Date(t.date),
+      bank_id: t.bank_id,
     }));
 
     setTransactions(formattedTransactions);

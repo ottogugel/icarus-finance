@@ -22,6 +22,7 @@ export interface Transaction {
   type: TransactionType;
   category: Category;
   date: Date;
+  bank_id?: string | null;
 }
 
 export const categoryLabels: Record<Category, string> = {
