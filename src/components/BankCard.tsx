@@ -8,9 +8,10 @@ interface BankCardProps {
   currentBalance: number;
   onDelete: (id: string) => void;
   onEdit: (bank: Bank) => void;
+  showPeriodLabel?: boolean;
 }
 
-export function BankCard({ bank, currentBalance, onDelete, onEdit }: BankCardProps) {
+export function BankCard({ bank, currentBalance, onDelete, onEdit, showPeriodLabel = false }: BankCardProps) {
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('pt-BR', {
       style: 'currency',
@@ -56,13 +57,19 @@ export function BankCard({ bank, currentBalance, onDelete, onEdit }: BankCardPro
       <CardContent>
         <div className="space-y-2">
           <div>
-            <p className="text-sm text-muted-foreground">Saldo Atual</p>
-            <p className="text-2xl font-bold">{formatCurrency(currentBalance)}</p>
+            <p className="text-sm text-muted-foreground">
+              {showPeriodLabel ? 'Movimentação do Período' : 'Saldo Atual'}
+            </p>
+            <p className={`text-2xl font-bold ${showPeriodLabel && currentBalance < 0 ? 'text-destructive' : showPeriodLabel && currentBalance > 0 ? 'text-success' : ''}`}>
+              {showPeriodLabel && currentBalance > 0 ? '+' : ''}{formatCurrency(currentBalance)}
+            </p>
           </div>
-          <div>
-            <p className="text-sm text-muted-foreground">Saldo Inicial</p>
-            <p className="text-sm">{formatCurrency(bank.initial_balance)}</p>
-          </div>
+          {!showPeriodLabel && (
+            <div>
+              <p className="text-sm text-muted-foreground">Saldo Inicial</p>
+              <p className="text-sm">{formatCurrency(bank.initial_balance)}</p>
+            </div>
+          )}
         </div>
       </CardContent>
     </Card>
