@@ -1,15 +1,16 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Trash2, Wallet } from 'lucide-react';
+import { Trash2, Wallet, Pencil } from 'lucide-react';
 import { Bank } from '@/hooks/useSupabaseBanks';
 
 interface BankCardProps {
   bank: Bank;
   currentBalance: number;
   onDelete: (id: string) => void;
+  onEdit: (bank: Bank) => void;
 }
 
-export function BankCard({ bank, currentBalance, onDelete }: BankCardProps) {
+export function BankCard({ bank, currentBalance, onDelete, onEdit }: BankCardProps) {
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('pt-BR', {
       style: 'currency',
@@ -33,14 +34,24 @@ export function BankCard({ bank, currentBalance, onDelete }: BankCardProps) {
           </div>
           {bank.name}
         </CardTitle>
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => onDelete(bank.id)}
-          className="text-destructive hover:text-destructive"
-        >
-          <Trash2 className="h-4 w-4" />
-        </Button>
+        <div className="flex gap-1">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => onEdit(bank)}
+            className="text-muted-foreground hover:text-foreground"
+          >
+            <Pencil className="h-4 w-4" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => onDelete(bank.id)}
+            className="text-destructive hover:text-destructive"
+          >
+            <Trash2 className="h-4 w-4" />
+          </Button>
+        </div>
       </CardHeader>
       <CardContent>
         <div className="space-y-2">
