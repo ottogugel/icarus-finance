@@ -1,13 +1,11 @@
 import { useSupabaseGoals } from '@/hooks/useSupabaseGoals';
-import { useSupabaseTransactions } from '@/hooks/useSupabaseTransactions';
 import { GoalsList } from '@/components/GoalsList';
 import { Target } from 'lucide-react';
 
 export default function Goals() {
-  const { goals, addGoal, deleteGoal, loading: goalsLoading } = useSupabaseGoals();
-  const { transactions, loading: transactionsLoading } = useSupabaseTransactions();
+  const { goals, addGoal, deleteGoal, loading } = useSupabaseGoals();
 
-  if (goalsLoading || transactionsLoading) {
+  if (loading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-lg">Carregando metas...</div>
@@ -23,14 +21,13 @@ export default function Goals() {
             <Target className="h-6 w-6" />
           </div>
           <div>
-            <h1 className="text-3xl font-bold">Metas de Gastos</h1>
-            <p className="text-muted-foreground">Defina e acompanhe suas metas por categoria</p>
+            <h1 className="text-3xl font-bold">Metas Financeiras</h1>
+            <p className="text-muted-foreground">Defina objetivos e acompanhe seu progresso</p>
           </div>
         </div>
 
         <GoalsList 
           goals={goals}
-          transactions={transactions}
           onAddGoal={addGoal}
           onDeleteGoal={deleteGoal}
         />

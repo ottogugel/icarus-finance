@@ -82,29 +82,83 @@ export type Database = {
           },
         ]
       }
-      goals: {
+      goal_deposits: {
         Row: {
-          category: string
+          amount: number
           created_at: string
+          date: string
+          description: string | null
+          goal_id: string
           id: string
-          limit_amount: number
-          month: string
           user_id: string
         }
         Insert: {
-          category: string
+          amount: number
           created_at?: string
+          date?: string
+          description?: string | null
+          goal_id: string
           id?: string
-          limit_amount: number
-          month: string
           user_id: string
         }
         Update: {
-          category?: string
+          amount?: number
           created_at?: string
+          date?: string
+          description?: string | null
+          goal_id?: string
           id?: string
-          limit_amount?: number
-          month?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "goal_deposits_goal_id_fkey"
+            columns: ["goal_id"]
+            isOneToOne: false
+            referencedRelation: "goals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "goal_deposits_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      goals: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          current_amount: number
+          description: string | null
+          id: string
+          name: string
+          status: string
+          target_amount: number
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          current_amount?: number
+          description?: string | null
+          id?: string
+          name: string
+          status?: string
+          target_amount: number
+          user_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          current_amount?: number
+          description?: string | null
+          id?: string
+          name?: string
+          status?: string
+          target_amount?: number
           user_id?: string
         }
         Relationships: [
