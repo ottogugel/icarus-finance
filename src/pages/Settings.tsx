@@ -1,11 +1,19 @@
 import { useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
+import { useCurrency, currencies, CurrencyCode } from '@/hooks/useCurrency';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Settings as SettingsIcon, User, Palette, Info } from 'lucide-react';
 import { toast } from 'sonner';
 import { useTheme } from 'next-themes';
@@ -13,12 +21,18 @@ import { useTheme } from 'next-themes';
 export default function Settings() {
   const { user } = useAuth();
   const { theme, setTheme } = useTheme();
+  const { currency, setCurrency } = useCurrency();
   const [notifications, setNotifications] = useState(true);
   const [emailUpdates, setEmailUpdates] = useState(false);
 
   const handleSaveProfile = (e: React.FormEvent) => {
     e.preventDefault();
     toast.success('Perfil atualizado com sucesso!');
+  };
+
+  const handleCurrencyChange = (value: string) => {
+    setCurrency(value as CurrencyCode);
+    toast.success(`Moeda alterada para ${currencies[value as CurrencyCode].name}`);
   };
 
   return (
@@ -177,12 +191,24 @@ export default function Settings() {
               <CardContent className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="currency">Moeda</Label>
-                  <Input
-                    id="currency"
-                    defaultValue="R$ (Real Brasileiro)"
-                    disabled
-                    className="bg-muted"
-                  />
+                  <Select value={currency} onValueChange={handleCurrencyChange}>
+                    <SelectTrigger id="currency">
+                      <SelectValue placeholder="Selecione a moeda" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {Object.values(currencies).map((curr) => (
+                        <SelectItem key={curr.code} value={curr.code}>
+                          <span className="flex items-center gap-2">
+                            <span className="font-medium">{curr.symbol}</span>
+                            <span>{curr.name}</span>
+                          </span>
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <p className="text-xs text-muted-foreground">
+                    Todos os valores serão exibidos na moeda selecionada
+                  </p>
                 </div>
 
                 <div className="space-y-2">

@@ -45,9 +45,24 @@ export const incomeCategories: Category[] = ['salary', 'freelance', 'investment'
 export const expenseCategories: Category[] = ['food', 'transport', 'housing', 'entertainment', 'health', 'education', 'shopping', 'bills', 'other-expense'];
 
 export function formatCurrency(value: number): string {
-  return new Intl.NumberFormat('pt-BR', {
+  // Check localStorage for currency preference
+  let currencyCode = 'BRL';
+  let locale = 'pt-BR';
+  
+  if (typeof window !== 'undefined') {
+    const stored = localStorage.getItem('finance-app-currency');
+    if (stored === 'USD') {
+      currencyCode = 'USD';
+      locale = 'en-US';
+    } else if (stored === 'EUR') {
+      currencyCode = 'EUR';
+      locale = 'de-DE';
+    }
+  }
+  
+  return new Intl.NumberFormat(locale, {
     style: 'currency',
-    currency: 'BRL',
+    currency: currencyCode,
   }).format(value);
 }
 
