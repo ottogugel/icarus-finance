@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { DollarSign } from "lucide-react";
 import Login from "@/assets/lottie/login.json";
 import Lottie from "lottie-react";
 import { supabase } from "@/integrations/supabase/client";
@@ -134,11 +135,9 @@ export default function Auth() {
       <div className="flex-1 lg:flex-none lg:w-[480px] flex items-center justify-center p-8 bg-background">
         <div className="w-full max-w-md">
           <div className="flex justify-center mb-8">
-            <img
-              className="h-16 w-auto object-contain"
-              src="./logo.png"
-              alt="Logo"
-            />
+            <div className="flex items-center justify-center h-16 w-16 rounded-2xl bg-gradient-to-br from-green-500 to-green-700 shadow-lg">
+              <DollarSign className="h-10 w-10 text-white" />
+            </div>
           </div>
 
           <Card className="border-0 shadow-2xl bg-background/80 backdrop-blur-sm">
