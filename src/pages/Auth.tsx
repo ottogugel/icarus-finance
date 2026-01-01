@@ -182,7 +182,7 @@ export default function Auth() {
                 <Button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full h-11 text-green-600 bg-gray-100 hover:bg-gray-200"
+                  className="w-full h-11 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-medium shadow-lg"
                 >
                   {isLoading ? "Entrando..." : "Entrar"}
                 </Button>
