@@ -3,11 +3,13 @@ import { AppSidebar } from "@/components/AppSidebar";
 import { LogOut, UserCircle } from "lucide-react";
 import { Outlet, Navigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
+import { useProfile } from "@/hooks/useProfile";
 import { Button } from "@/components/ui/button";
 import { AIChatAssistant } from "@/components/AIChatAssistant";
 
 export default function Layout() {
   const { user, loading, signOut } = useAuth();
+  const { displayName } = useProfile();
 
   if (loading) {
     return (
@@ -31,7 +33,7 @@ export default function Layout() {
             <div className="flex items-center gap-3">
               <div className="flex items-center gap-2">
                 <UserCircle className="h-5 w-5" />
-                <span className="text-sm">{user.email}</span>
+                <span className="text-sm">{displayName || user.email}</span>
               </div>
               <Button
                 variant="ghost"

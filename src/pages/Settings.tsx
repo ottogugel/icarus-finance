@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
+import { useProfile } from '@/hooks/useProfile';
 import { useCurrency, currencies, CurrencyCode } from '@/hooks/useCurrency';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -20,14 +21,32 @@ import { useTheme } from 'next-themes';
 
 export default function Settings() {
   const { user } = useAuth();
+  const { profile, updateProfile } = useProfile();
   const { theme, setTheme } = useTheme();
   const { currency, setCurrency } = useCurrency();
   const [notifications, setNotifications] = useState(true);
   const [emailUpdates, setEmailUpdates] = useState(false);
+  const [name, setName] = useState('');
+  const [isSaving, setIsSaving] = useState(false);
 
-  const handleSaveProfile = (e: React.FormEvent) => {
+  useEffect(() => {
+    if (profile?.name) {
+      setName(profile.name);
+    }
+  }, [profile]);
+
+  const handleSaveProfile = async (e: React.FormEvent) => {
     e.preventDefault();
-    toast.success('Perfil atualizado com sucesso!');
+    setIsSaving(true);
+    
+    const { error } = await updateProfile(name.trim());
+    
+    if (error) {
+      toast.error('Erro ao salvar perfil');
+    } else {
+      toast.success('Perfil atualizado com sucesso!');
+    }
+    setIsSaving(false);
   };
 
   const handleCurrencyChange = (value: string) => {
@@ -95,9 +114,13 @@ export default function Settings() {
                       id="name"
                       type="text"
                       placeholder="Seu nome"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
                     />
                   </div>
-                  <Button type="submit">Salvar Alterações</Button>
+                  <Button type="submit" disabled={isSaving}>
+                    {isSaving ? 'Salvando...' : 'Salvar Alterações'}
+                  </Button>
                 </form>
               </CardContent>
             </Card>
