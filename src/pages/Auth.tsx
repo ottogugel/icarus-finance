@@ -11,7 +11,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DollarSign } from "lucide-react";
 import Login from "@/assets/lottie/login.json";
 import Lottie from "lottie-react";
@@ -65,8 +64,9 @@ export default function Auth() {
   };
 
   // -------------------------
-  // CREATE ACCOUNT
+  // CREATE ACCOUNT (FUNÇÃO MANTIDA PARA USO FUTURO)
   // -------------------------
+  /* 
   const handleSignUp = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
@@ -109,9 +109,10 @@ export default function Auth() {
     setSuccess("Conta criada com sucesso! Verifique seu email.");
     setIsLoading(false);
   };
+  */
 
   // -------------------------
-  // RETURN DO COMPONENTE (AGORA CORRETO)
+  // RETURN DO COMPONENTE
   // -------------------------
   return (
     <div className="min-h-screen bg-background flex">
@@ -154,48 +155,46 @@ export default function Auth() {
             </CardHeader>
 
             <CardContent className="space-y-6">
+              {/* LOGIN */}
+              <form onSubmit={handleSignIn} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="signin-email">Email</Label>
+                  <Input
+                    id="signin-email"
+                    name="email"
+                    type="email"
+                    required
+                    disabled={isLoading}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="signin-password">Senha</Label>
+                  <Input
+                    id="signin-password"
+                    name="password"
+                    type="password"
+                    required
+                    disabled={isLoading}
+                  />
+                </div>
+
+                <Button
+                  type="submit"
+                  disabled={isLoading}
+                  className="w-full h-11 text-green-600 bg-gray-100 hover:bg-gray-200"
+                >
+                  {isLoading ? "Entrando..." : "Entrar"}
+                </Button>
+              </form>
+
+              {/* SIGNUP - COMENTADO/OCULTO
               <Tabs defaultValue="signin" className="w-full">
                 <TabsList className="grid w-full grid-cols-2">
                   <TabsTrigger value="signin">Entrar</TabsTrigger>
                   <TabsTrigger value="signup">Criar Conta</TabsTrigger>
                 </TabsList>
 
-                {/* LOGIN */}
-                <TabsContent value="signin" className="space-y-4">
-                  <form onSubmit={handleSignIn} className="space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="signin-email">Email</Label>
-                      <Input
-                        id="signin-email"
-                        name="email"
-                        type="email"
-                        required
-                        disabled={isLoading}
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="signin-password">Senha</Label>
-                      <Input
-                        id="signin-password"
-                        name="password"
-                        type="password"
-                        required
-                        disabled={isLoading}
-                      />
-                    </div>
-
-                    <Button
-                      type="submit"
-                      disabled={isLoading}
-                      className="w-full h-11 text-green-600 bg-gray-100 hover:bg-gray-200"
-                    >
-                      {isLoading ? "Entrando..." : "Entrar"}
-                    </Button>
-                  </form>
-                </TabsContent>
-
-                {/* SIGNUP */}
                 <TabsContent value="signup" className="space-y-4">
                   <form onSubmit={handleSignUp} className="space-y-4">
                     <div className="space-y-2">
@@ -241,6 +240,7 @@ export default function Auth() {
                   </form>
                 </TabsContent>
               </Tabs>
+              FIM DO SIGNUP COMENTADO */}
 
               {error && (
                 <Alert variant="destructive">
