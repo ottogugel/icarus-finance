@@ -38,9 +38,9 @@ export default function Settings() {
   const handleSaveProfile = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSaving(true);
-    
+
     const { error } = await updateProfile(name.trim());
-    
+
     if (error) {
       toast.error('Erro ao salvar perfil');
     } else {
@@ -251,7 +251,7 @@ export default function Settings() {
           <TabsContent value="about" className="space-y-4">
             <Card>
               <CardHeader>
-                <CardTitle>Sobre o Finance Tracker</CardTitle>
+                <CardTitle>Sobre o Icarus Finance</CardTitle>
                 <CardDescription>
                   Informações sobre o aplicativo
                 </CardDescription>
@@ -259,13 +259,13 @@ export default function Settings() {
               <CardContent className="space-y-4">
                 <div className="space-y-2">
                   <Label>Versão</Label>
-                  <p className="text-sm text-muted-foreground">1.0.3</p>
+                  <p className="text-sm text-muted-foreground">1.1.0</p>
                 </div>
 
                 <div className="space-y-2">
                   <Label>Descrição</Label>
                   <p className="text-sm text-muted-foreground">
-                    Finance Tracker é um aplicativo completo para gerenciamento de finanças pessoais.
+                    Icarus Finance é um aplicativo completo para gerenciamento de finanças pessoais.
                     Acompanhe suas receitas, despesas, metas financeiras e investimentos em um só lugar.
                   </p>
                 </div>
