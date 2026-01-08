@@ -4,13 +4,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
+import { supabase } from "@/integrations/supabase/client";
 
 type Message = {
   role: "user" | "assistant";
   content: string;
 };
 
-const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-chat`;
+const SUPABASE_URL = "https://yrrxhtmpuucgionybxhy.supabase.co";
 
 export function AIChatAssistant() {
   const [isOpen, setIsOpen] = useState(false);
@@ -26,11 +27,13 @@ export function AIChatAssistant() {
   }, [messages]);
 
   const streamChat = async (userMessages: Message[]) => {
-    const resp = await fetch(CHAT_URL, {
+    const { data: { session } } = await supabase.auth.getSession();
+    
+    const resp = await fetch(`${SUPABASE_URL}/functions/v1/ai-chat`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+        Authorization: `Bearer ${session?.access_token || ""}`,
       },
       body: JSON.stringify({ messages: userMessages }),
     });
