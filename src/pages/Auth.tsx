@@ -10,18 +10,16 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Alert, AlertDescription } from "@/components/ui/alert";
 import { DollarSign } from "lucide-react";
 import Login from "@/assets/lottie/login.json";
 import Lottie from "lottie-react";
 import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 export default function Auth() {
   const navigate = useNavigate();
 
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
 
   // Check if user is already logged in
   useEffect(() => {
@@ -40,8 +38,6 @@ export default function Auth() {
   const handleSignIn = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
-    setError(null);
-    setSuccess(null);
 
     const formData = new FormData(e.currentTarget);
     const email = formData.get("email") as string;
@@ -53,12 +49,14 @@ export default function Auth() {
     });
 
     if (error) {
-      setError(error.message);
+      toast.error("Credenciais inválidas", {
+        description: "Verifique seu e-mail e senha e tente novamente.",
+      });
       setIsLoading(false);
       return;
     }
 
-    setSuccess("Login realizado!");
+    toast.success("Login realizado com sucesso!");
     setIsLoading(false);
     navigate("/");
   };
@@ -242,16 +240,6 @@ export default function Auth() {
               </Tabs>
               FIM DO SIGNUP COMENTADO */}
 
-              {error && (
-                <Alert variant="destructive">
-                  <AlertDescription>{error}</AlertDescription>
-                </Alert>
-              )}
-              {success && (
-                <Alert>
-                  <AlertDescription>{success}</AlertDescription>
-                </Alert>
-              )}
             </CardContent>
           </Card>
         </div>
