@@ -22,7 +22,7 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <Toaster />
-      <Sonner />
+      <Sonner position="top-center" richColors />
       <BrowserRouter>
         <Routes>
           {/* ROTAS QUE USAM SIDEBAR */}
