@@ -25,46 +25,51 @@ import { Plus, Pencil, Trash2, TrendingUp, TrendingDown } from 'lucide-react';
 import { toast } from 'sonner';
 
 export default function Categories() {
-  const { categories, addCategory, updateCategory, deleteCategory } = useCategories();
+  const { categories, loading, addCategory, updateCategory, deleteCategory } = useCategories();
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [editingCategory, setEditingCategory] = useState<any>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [newName, setNewName] = useState('');
   const [newType, setNewType] = useState<TransactionType>('expense');
   const [newIcon, setNewIcon] = useState('');
 
-  const handleAdd = () => {
+  const handleAdd = async () => {
     if (!newName.trim()) {
       toast.error('Digite um nome para a categoria');
       return;
     }
 
-    addCategory(newName, newType, newIcon);
+    setIsSubmitting(true);
+    await addCategory(newName, newType, newIcon);
     setNewName('');
     setNewType('expense');
     setNewIcon('');
     setIsAddOpen(false);
+    setIsSubmitting(false);
     toast.success('Categoria adicionada com sucesso!');
   };
 
-  const handleEdit = () => {
+  const handleEdit = async () => {
     if (!newName.trim()) {
       toast.error('Digite um nome para a categoria');
       return;
     }
 
-    updateCategory(editingCategory.id, newName, newIcon);
+    setIsSubmitting(true);
+    await updateCategory(editingCategory.id, newName, newIcon);
     setEditingCategory(null);
     setNewName('');
     setNewIcon('');
     setIsEditOpen(false);
+    setIsSubmitting(false);
     toast.success('Categoria atualizada com sucesso!');
   };
 
-  const handleDelete = (id: string, name: string) => {
+  const handleDelete = async (id: string, name: string) => {
     if (confirm(`Deseja realmente excluir a categoria "${name}"?`)) {
-      deleteCategory(id);
+      await deleteCategory(id);
       toast.success('Categoria excluída com sucesso!');
     }
   };
@@ -78,6 +83,16 @@ export default function Categories() {
 
   const incomeCategories = categories.filter((c) => c.type === 'income');
   const expenseCategories = categories.filter((c) => c.type === 'expense');
+
+  if (loading) {
+    return (
+      <div className="container mx-auto py-8 px-4 max-w-6xl">
+        <div className="flex items-center justify-center h-64">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto py-8 px-4 max-w-6xl">
@@ -144,7 +159,9 @@ export default function Categories() {
               <Button variant="outline" onClick={() => setIsAddOpen(false)}>
                 Cancelar
               </Button>
-              <Button onClick={handleAdd}>Adicionar</Button>
+              <Button onClick={handleAdd} disabled={isSubmitting}>
+                {isSubmitting ? 'Adicionando...' : 'Adicionar'}
+              </Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
@@ -278,7 +295,9 @@ export default function Categories() {
             <Button variant="outline" onClick={() => setIsEditOpen(false)}>
               Cancelar
             </Button>
-            <Button onClick={handleEdit}>Salvar</Button>
+            <Button onClick={handleEdit} disabled={isSubmitting}>
+              {isSubmitting ? 'Salvando...' : 'Salvar'}
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
