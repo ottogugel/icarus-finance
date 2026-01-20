@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -16,7 +16,7 @@ interface AddTransactionDialogProps {
 }
 
 export function AddTransactionDialog({ onAdd, banks = [] }: AddTransactionDialogProps) {
-  const { getCategoriesByType } = useCategories();
+  const { categories: allCategories } = useCategories();
   const [open, setOpen] = useState(false);
   const [description, setDescription] = useState('');
   const [amount, setAmount] = useState('');
@@ -25,7 +25,15 @@ export function AddTransactionDialog({ onAdd, banks = [] }: AddTransactionDialog
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const [bankId, setBankId] = useState<string>('');
   
-  const categories = getCategoriesByType(type);
+  // Filtra categorias pelo tipo selecionado
+  const categories = useMemo(() => {
+    return allCategories.filter((c) => c.type === type);
+  }, [allCategories, type]);
+
+  // Reseta a categoria quando o tipo muda
+  useEffect(() => {
+    setCategory('');
+  }, [type]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
