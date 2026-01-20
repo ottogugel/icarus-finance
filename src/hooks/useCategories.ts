@@ -1,5 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+import { supabase } from '@/integrations/supabase/client';
 import { TransactionType } from '@/lib/finance';
+import { toast } from 'sonner';
 
 export interface CustomCategory {
   id: string;
@@ -8,52 +10,189 @@ export interface CustomCategory {
   icon?: string;
 }
 
-const STORAGE_KEY = 'finance-tracker-categories';
-
-const defaultCategories: CustomCategory[] = [
-  { id: 'salary', name: 'Salário', type: 'income' },
-  { id: 'freelance', name: 'Freelance', type: 'income' },
-  { id: 'investment', name: 'Investimento', type: 'income' },
-  { id: 'other-income', name: 'Outras Receitas', type: 'income' },
-  { id: 'food', name: 'Alimentação', type: 'expense' },
-  { id: 'transport', name: 'Transporte', type: 'expense' },
-  { id: 'housing', name: 'Moradia', type: 'expense' },
-  { id: 'entertainment', name: 'Entretenimento', type: 'expense' },
-  { id: 'health', name: 'Saúde', type: 'expense' },
-  { id: 'education', name: 'Educação', type: 'expense' },
-  { id: 'shopping', name: 'Compras', type: 'expense' },
-  { id: 'bills', name: 'Contas', type: 'expense' },
-  { id: 'other-expense', name: 'Outras Despesas', type: 'expense' },
+const defaultCategories: Omit<CustomCategory, 'id'>[] = [
+  { name: 'Salário', type: 'income' },
+  { name: 'Freelance', type: 'income' },
+  { name: 'Investimento', type: 'income' },
+  { name: 'Outras Receitas', type: 'income' },
+  { name: 'Alimentação', type: 'expense' },
+  { name: 'Transporte', type: 'expense' },
+  { name: 'Moradia', type: 'expense' },
+  { name: 'Entretenimento', type: 'expense' },
+  { name: 'Saúde', type: 'expense' },
+  { name: 'Educação', type: 'expense' },
+  { name: 'Compras', type: 'expense' },
+  { name: 'Contas', type: 'expense' },
+  { name: 'Outras Despesas', type: 'expense' },
 ];
 
 export function useCategories() {
-  const [categories, setCategories] = useState<CustomCategory[]>(() => {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    return stored ? JSON.parse(stored) : defaultCategories;
-  });
+  const [categories, setCategories] = useState<CustomCategory[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [userId, setUserId] = useState<string | null>(null);
 
+  // Check auth state
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(categories));
-  }, [categories]);
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_, session) => {
+      setUserId(session?.user?.id ?? null);
+    });
 
-  const addCategory = (name: string, type: TransactionType, icon?: string) => {
-    const newCategory: CustomCategory = {
-      id: crypto.randomUUID(),
-      name,
-      type,
-      icon,
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUserId(session?.user?.id ?? null);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  // Fetch categories
+  const fetchCategories = useCallback(async () => {
+    if (!userId) {
+      setCategories([]);
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const { data, error } = await supabase
+        .from('categories')
+        .select('*')
+        .eq('user_id', userId)
+        .order('name');
+
+      if (error) throw error;
+
+      // If no categories exist, create default ones
+      if (!data || data.length === 0) {
+        await createDefaultCategories(userId);
+        return;
+      }
+
+      setCategories(data.map(cat => ({
+        id: cat.id,
+        name: cat.name,
+        type: cat.type as TransactionType,
+        icon: cat.icon ?? undefined,
+      })));
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+      toast.error('Erro ao carregar categorias');
+    } finally {
+      setLoading(false);
+    }
+  }, [userId]);
+
+  // Create default categories for new users
+  const createDefaultCategories = async (uid: string) => {
+    try {
+      const categoriesToInsert = defaultCategories.map(cat => ({
+        user_id: uid,
+        name: cat.name,
+        type: cat.type,
+        icon: cat.icon ?? null,
+      }));
+
+      const { error } = await supabase
+        .from('categories')
+        .insert(categoriesToInsert);
+
+      if (error) throw error;
+
+      // Fetch again after creating defaults
+      const { data } = await supabase
+        .from('categories')
+        .select('*')
+        .eq('user_id', uid)
+        .order('name');
+
+      if (data) {
+        setCategories(data.map(cat => ({
+          id: cat.id,
+          name: cat.name,
+          type: cat.type as TransactionType,
+          icon: cat.icon ?? undefined,
+        })));
+      }
+    } catch (error) {
+      console.error('Error creating default categories:', error);
+    }
+  };
+
+  // Setup realtime subscription
+  useEffect(() => {
+    if (!userId) return;
+
+    fetchCategories();
+
+    const channel = supabase
+      .channel('categories-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'categories',
+          filter: `user_id=eq.${userId}`,
+        },
+        () => {
+          fetchCategories();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
     };
-    setCategories((prev) => [...prev, newCategory]);
+  }, [userId, fetchCategories]);
+
+  const addCategory = async (name: string, type: TransactionType, icon?: string) => {
+    if (!userId) {
+      toast.error('Você precisa estar logado');
+      return;
+    }
+
+    try {
+      const { error } = await supabase
+        .from('categories')
+        .insert({
+          user_id: userId,
+          name,
+          type,
+          icon: icon ?? null,
+        });
+
+      if (error) throw error;
+    } catch (error) {
+      console.error('Error adding category:', error);
+      toast.error('Erro ao adicionar categoria');
+    }
   };
 
-  const updateCategory = (id: string, name: string, icon?: string) => {
-    setCategories((prev) =>
-      prev.map((c) => (c.id === id ? { ...c, name, icon } : c))
-    );
+  const updateCategory = async (id: string, name: string, icon?: string) => {
+    try {
+      const { error } = await supabase
+        .from('categories')
+        .update({ name, icon: icon ?? null })
+        .eq('id', id);
+
+      if (error) throw error;
+    } catch (error) {
+      console.error('Error updating category:', error);
+      toast.error('Erro ao atualizar categoria');
+    }
   };
 
-  const deleteCategory = (id: string) => {
-    setCategories((prev) => prev.filter((c) => c.id !== id));
+  const deleteCategory = async (id: string) => {
+    try {
+      const { error } = await supabase
+        .from('categories')
+        .delete()
+        .eq('id', id);
+
+      if (error) throw error;
+    } catch (error) {
+      console.error('Error deleting category:', error);
+      toast.error('Erro ao excluir categoria');
+    }
   };
 
   const getCategoriesByType = (type: TransactionType) => {
@@ -62,6 +201,7 @@ export function useCategories() {
 
   return {
     categories,
+    loading,
     addCategory,
     updateCategory,
     deleteCategory,
