@@ -4,10 +4,11 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { TransactionType, Category, incomeCategories, expenseCategories, categoryLabels } from '@/lib/finance';
+import { TransactionType, Category } from '@/lib/finance';
 import { Plus } from 'lucide-react';
 import { toast } from 'sonner';
 import { Bank } from '@/hooks/useSupabaseBanks';
+import { useCategories } from '@/hooks/useCategories';
 
 interface AddTransactionDialogProps {
   onAdd: (description: string, amount: number, type: TransactionType, category: Category, date: Date, bankId?: string) => void;
@@ -15,13 +16,16 @@ interface AddTransactionDialogProps {
 }
 
 export function AddTransactionDialog({ onAdd, banks = [] }: AddTransactionDialogProps) {
+  const { getCategoriesByType } = useCategories();
   const [open, setOpen] = useState(false);
   const [description, setDescription] = useState('');
   const [amount, setAmount] = useState('');
   const [type, setType] = useState<TransactionType>('expense');
-  const [category, setCategory] = useState<Category>('food');
+  const [category, setCategory] = useState<string>('');
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const [bankId, setBankId] = useState<string>('');
+  
+  const categories = getCategoriesByType(type);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -42,13 +46,18 @@ export function AddTransactionDialog({ onAdd, banks = [] }: AddTransactionDialog
       return;
     }
 
-    onAdd(description, parsedAmount, type, category, new Date(date), bankId);
+    if (!category) {
+      toast.error('Selecione uma categoria');
+      return;
+    }
+
+    onAdd(description, parsedAmount, type, category as Category, new Date(date), bankId);
     
     // Reset form
     setDescription('');
     setAmount('');
     setType('expense');
-    setCategory('food');
+    setCategory('');
     setDate(new Date().toISOString().split('T')[0]);
     setBankId('');
     setOpen(false);
@@ -56,7 +65,7 @@ export function AddTransactionDialog({ onAdd, banks = [] }: AddTransactionDialog
     toast.success('Transação adicionada!');
   };
 
-  const categories = type === 'income' ? incomeCategories : expenseCategories;
+  
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -108,14 +117,14 @@ export function AddTransactionDialog({ onAdd, banks = [] }: AddTransactionDialog
 
           <div className="space-y-2">
             <Label htmlFor="category">Categoria</Label>
-            <Select value={category} onValueChange={(value) => setCategory(value as Category)}>
+            <Select value={category} onValueChange={setCategory}>
               <SelectTrigger id="category">
-                <SelectValue />
+                <SelectValue placeholder="Selecione uma categoria" />
               </SelectTrigger>
               <SelectContent>
                 {categories.map((cat) => (
-                  <SelectItem key={cat} value={cat}>
-                    {categoryLabels[cat]}
+                  <SelectItem key={cat.id} value={cat.id}>
+                    {cat.name}
                   </SelectItem>
                 ))}
               </SelectContent>
