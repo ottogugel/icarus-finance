@@ -20,8 +20,14 @@ const Transactions = () => {
   const { banks } = useSupabaseBanks();
   const [filterType, setFilterType] = useState<'all' | TransactionType>('all');
   const [filterCategory, setFilterCategory] = useState<'all' | Category>('all');
-  const [startDate, setStartDate] = useState<Date | undefined>(undefined);
-  const [endDate, setEndDate] = useState<Date | undefined>(undefined);
+  const [startDate, setStartDate] = useState<Date | undefined>(() => {
+    const now = new Date();
+    return new Date(now.getFullYear(), now.getMonth(), 1);
+  });
+  const [endDate, setEndDate] = useState<Date | undefined>(() => {
+    const now = new Date();
+    return new Date(now.getFullYear(), now.getMonth() + 1, 0);
+  });
 
   const filteredTransactions = useMemo(() => {
     return transactions.filter((t) => {
