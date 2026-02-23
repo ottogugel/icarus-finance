@@ -82,6 +82,146 @@ export type Database = {
           },
         ]
       }
+      credit_card_bills: {
+        Row: {
+          created_at: string
+          credit_card_id: string
+          due_date: string
+          id: string
+          paid_at: string | null
+          reference_month: string
+          status: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          credit_card_id: string
+          due_date: string
+          id?: string
+          paid_at?: string | null
+          reference_month: string
+          status?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          credit_card_id?: string
+          due_date?: string
+          id?: string
+          paid_at?: string | null
+          reference_month?: string
+          status?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "credit_card_bills_credit_card_id_fkey"
+            columns: ["credit_card_id"]
+            isOneToOne: false
+            referencedRelation: "credit_cards"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "credit_card_bills_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      credit_card_expenses: {
+        Row: {
+          amount: number
+          bill_id: string
+          category: string
+          created_at: string
+          date: string
+          description: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          bill_id: string
+          category: string
+          created_at?: string
+          date: string
+          description: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          bill_id?: string
+          category?: string
+          created_at?: string
+          date?: string
+          description?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "credit_card_expenses_bill_id_fkey"
+            columns: ["bill_id"]
+            isOneToOne: false
+            referencedRelation: "credit_card_bills"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "credit_card_expenses_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      credit_cards: {
+        Row: {
+          card_limit: number
+          closing_day: number
+          color: string
+          created_at: string
+          due_day: number
+          id: string
+          name: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          card_limit?: number
+          closing_day?: number
+          color?: string
+          created_at?: string
+          due_day?: number
+          id?: string
+          name: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          card_limit?: number
+          closing_day?: number
+          color?: string
+          created_at?: string
+          due_day?: number
+          id?: string
+          name?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "credit_cards_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       goal_deposits: {
         Row: {
           amount: number
