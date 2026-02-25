@@ -51,8 +51,8 @@ const CreditCards = () => {
 
   const currentBill = useMemo(() => {
     return bills.find(b => {
-      const ref = new Date(b.reference_month);
-      return ref.getFullYear() === selectedMonth.getFullYear() && ref.getMonth() === selectedMonth.getMonth();
+      const [year, month] = b.reference_month.split('-').map(Number);
+      return year === selectedMonth.getFullYear() && month === selectedMonth.getMonth() + 1;
     });
   }, [bills, selectedMonth]);
 
