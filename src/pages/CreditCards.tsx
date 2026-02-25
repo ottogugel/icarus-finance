@@ -23,6 +23,7 @@ const CreditCards = () => {
     cards, bills, expenses, loading,
     addCard, deleteCard, fetchBills, fetchExpenses,
     getOrCreateBill, addExpense, deleteExpense, toggleBillStatus,
+    setSelectedCardId,
   } = useCreditCards();
   const { categories } = useCategories();
 
@@ -44,6 +45,7 @@ const CreditCards = () => {
   const [expAmount, setExpAmount] = useState('');
   const [expCategory, setExpCategory] = useState('');
   const [expDate, setExpDate] = useState<Date>(new Date());
+  const [expInstallments, setExpInstallments] = useState('1');
 
   const expenseCategories = useMemo(() => 
     categories.filter(c => c.type === 'expense'), [categories]
@@ -62,6 +64,7 @@ const CreditCards = () => {
 
   const handleSelectCard = async (cardId: string) => {
     setSelectedCard(cardId);
+    setSelectedCardId(cardId);
     setSelectedBillId(null);
     await fetchBills(cardId);
   };
@@ -101,12 +104,13 @@ const CreditCards = () => {
 
   const handleAddExpense = async () => {
     if (!expDesc.trim() || !expAmount || !selectedBillId) return;
-    await addExpense(selectedBillId, expDesc, Number(expAmount), expCategory || 'other-expense', expDate);
+    await addExpense(selectedBillId, expDesc, Number(expAmount), expCategory || 'other-expense', expDate, Number(expInstallments) || 1);
     setAddExpenseOpen(false);
     setExpDesc('');
     setExpAmount('');
     setExpCategory('');
     setExpDate(new Date());
+    setExpInstallments('1');
   };
 
   const activeCard = cards.find(c => c.id === selectedCard);
@@ -324,8 +328,17 @@ const CreditCards = () => {
                                   className={cn("p-3 pointer-events-auto")}
                                 />
                               </PopoverContent>
-                            </Popover>
+                          </Popover>
                           </div>
+                          <div className="space-y-2">
+                            <Label>Parcelas</Label>
+                            <Input type="number" min="1" max="48" value={expInstallments} onChange={e => setExpInstallments(e.target.value)} placeholder="1" />
+                          </div>
+                          {Number(expInstallments) > 1 && Number(expAmount) > 0 && (
+                            <p className="text-sm text-muted-foreground">
+                              {Number(expInstallments)}x de {formatCurrency(Math.round((Number(expAmount) / Number(expInstallments)) * 100) / 100)}
+                            </p>
+                          )}
                           <Button className="w-full" onClick={handleAddExpense}>Adicionar</Button>
                         </div>
                       </DialogContent>
@@ -340,6 +353,7 @@ const CreditCards = () => {
                           <TableHead>Data</TableHead>
                           <TableHead>Descrição</TableHead>
                           <TableHead>Categoria</TableHead>
+                          <TableHead>Parcela</TableHead>
                           <TableHead className="text-right">Valor</TableHead>
                           <TableHead></TableHead>
                         </TableRow>
@@ -348,9 +362,14 @@ const CreditCards = () => {
                         {expenses.map(exp => (
                           <TableRow key={exp.id}>
                             <TableCell>{format(new Date(exp.date), 'dd/MM/yyyy')}</TableCell>
-                            <TableCell>{exp.description}</TableCell>
+                          <TableCell>{exp.description}</TableCell>
                             <TableCell>
                               <Badge variant="secondary">{exp.category}</Badge>
+                            </TableCell>
+                            <TableCell>
+                              {exp.installments > 1 ? (
+                                <Badge variant="outline">{exp.current_installment}/{exp.installments}</Badge>
+                              ) : null}
                             </TableCell>
                             <TableCell className="text-right font-medium text-danger">
                               {formatCurrency(Number(exp.amount))}

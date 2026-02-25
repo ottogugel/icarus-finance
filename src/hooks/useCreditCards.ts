@@ -30,6 +30,8 @@ export interface CreditCardExpense {
   amount: number;
   category: string;
   date: string;
+  installments: number;
+  current_installment: number;
   created_at: string;
 }
 
@@ -39,6 +41,7 @@ export function useCreditCards() {
   const [bills, setBills] = useState<CreditCardBill[]>([]);
   const [expenses, setExpenses] = useState<CreditCardExpense[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedCardId, setSelectedCardId] = useState<string | null>(null);
 
   const fetchCards = useCallback(async () => {
     if (!user) return;
@@ -174,24 +177,63 @@ export function useCreditCards() {
     return data.id;
   };
 
-  const addExpense = async (billId: string, description: string, amount: number, category: string, date: Date) => {
+  const addExpense = async (billId: string, description: string, amount: number, category: string, date: Date, installments: number = 1) => {
     if (!user) return;
-    const { error } = await supabase.from('credit_card_expenses').insert({
-      bill_id: billId,
-      user_id: user.id,
-      description,
-      amount,
-      category,
-      date: date.toISOString().split('T')[0],
-    });
-    if (error) {
-      toast.error('Erro ao adicionar despesa');
-      console.error(error);
-      return;
+
+    if (installments <= 1) {
+      const { error } = await supabase.from('credit_card_expenses').insert({
+        bill_id: billId,
+        user_id: user.id,
+        description,
+        amount,
+        category,
+        date: date.toISOString().split('T')[0],
+        installments: 1,
+        current_installment: 1,
+      });
+      if (error) {
+        toast.error('Erro ao adicionar despesa');
+        console.error(error);
+        return;
+      }
+    } else {
+      // Find which card this bill belongs to
+      const bill = bills.find(b => b.id === billId);
+      if (!bill) return;
+
+      const installmentAmount = Math.round((amount / installments) * 100) / 100;
+
+      for (let i = 0; i < installments; i++) {
+        const refMonth = new Date(date.getFullYear(), date.getMonth() + i, 1);
+        const targetBillId = await getOrCreateBill(bill.credit_card_id, refMonth);
+        if (!targetBillId) {
+          toast.error(`Erro ao criar fatura para parcela ${i + 1}`);
+          return;
+        }
+
+        const { error } = await supabase.from('credit_card_expenses').insert({
+          bill_id: targetBillId,
+          user_id: user.id,
+          description,
+          amount: installmentAmount,
+          category,
+          date: date.toISOString().split('T')[0],
+          installments,
+          current_installment: i + 1,
+        });
+        if (error) {
+          toast.error(`Erro ao adicionar parcela ${i + 1}`);
+          console.error(error);
+          return;
+        }
+      }
     }
-    toast.success('Despesa adicionada!');
+
+    toast.success(installments > 1 ? `Despesa parcelada em ${installments}x adicionada!` : 'Despesa adicionada!');
     fetchExpenses(billId);
+    if (selectedCardId) fetchBills(selectedCardId);
   };
+
 
   const deleteExpense = async (id: string, billId: string) => {
     if (!user) return;
@@ -234,6 +276,8 @@ export function useCreditCards() {
     bills,
     expenses,
     loading,
+    selectedCardId,
+    setSelectedCardId,
     addCard,
     deleteCard,
     fetchBills,
