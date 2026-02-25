@@ -136,9 +136,11 @@ export type Database = {
           bill_id: string
           category: string
           created_at: string
+          current_installment: number
           date: string
           description: string
           id: string
+          installments: number
           user_id: string
         }
         Insert: {
@@ -146,9 +148,11 @@ export type Database = {
           bill_id: string
           category: string
           created_at?: string
+          current_installment?: number
           date: string
           description: string
           id?: string
+          installments?: number
           user_id: string
         }
         Update: {
@@ -156,9 +160,11 @@ export type Database = {
           bill_id?: string
           category?: string
           created_at?: string
+          current_installment?: number
           date?: string
           description?: string
           id?: string
+          installments?: number
           user_id?: string
         }
         Relationships: [
