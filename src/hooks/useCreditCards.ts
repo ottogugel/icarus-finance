@@ -235,6 +235,22 @@ export function useCreditCards() {
   };
 
 
+  const updateExpense = async (id: string, billId: string, updates: { description?: string; amount?: number; category?: string; date?: string }) => {
+    if (!user) return;
+    const { error } = await supabase
+      .from('credit_card_expenses')
+      .update(updates)
+      .eq('id', id)
+      .eq('user_id', user.id);
+    if (error) {
+      toast.error('Erro ao atualizar despesa');
+      console.error(error);
+      return;
+    }
+    toast.success('Despesa atualizada!');
+    fetchExpenses(billId);
+  };
+
   const deleteExpense = async (id: string, billId: string) => {
     if (!user) return;
     const { error } = await supabase.from('credit_card_expenses').delete().eq('id', id).eq('user_id', user.id);
@@ -284,6 +300,7 @@ export function useCreditCards() {
     fetchExpenses,
     getOrCreateBill,
     addExpense,
+    updateExpense,
     deleteExpense,
     toggleBillStatus,
   };
