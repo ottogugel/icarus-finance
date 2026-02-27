@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { format, addMonths, subMonths } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { CreditCard as CreditCardIcon, Plus, ChevronLeft, ChevronRight, Trash2, CheckCircle, Clock, CalendarIcon, Pencil } from 'lucide-react';
@@ -80,14 +80,22 @@ const CreditCards = () => {
   const handleMonthChange = async (direction: 'prev' | 'next') => {
     const newMonth = direction === 'prev' ? subMonths(selectedMonth, 1) : addMonths(selectedMonth, 1);
     setSelectedMonth(newMonth);
-    // Re-fetch bills to find the one for this month
+    setSelectedBillId(null);
     if (selectedCard) {
       await fetchBills(selectedCard);
     }
   };
 
-  // When bills change, auto-select current month bill
+  // Auto-select bill when bills or month changes
   const activeBill = currentBill;
+
+  // When currentBill changes, auto-load it
+  useEffect(() => {
+    if (currentBill) {
+      setSelectedBillId(currentBill.id);
+      fetchExpenses(currentBill.id);
+    }
+  }, [currentBill?.id]);
 
   const handleViewBill = async () => {
     if (!selectedCard) return;
