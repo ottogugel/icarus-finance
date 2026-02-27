@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import { format, addMonths, subMonths } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { CreditCard as CreditCardIcon, Plus, ChevronLeft, ChevronRight, Trash2, CheckCircle, Clock, CalendarIcon } from 'lucide-react';
+import { CreditCard as CreditCardIcon, Plus, ChevronLeft, ChevronRight, Trash2, CheckCircle, Clock, CalendarIcon, Pencil } from 'lucide-react';
 import { useCreditCards } from '@/hooks/useCreditCards';
 import { useCategories } from '@/hooks/useCategories';
 import { formatCurrency } from '@/lib/finance';
@@ -22,7 +22,7 @@ const CreditCards = () => {
   const {
     cards, bills, expenses, loading,
     addCard, deleteCard, fetchBills, fetchExpenses,
-    getOrCreateBill, addExpense, deleteExpense, toggleBillStatus,
+    getOrCreateBill, addExpense, updateExpense, deleteExpense, toggleBillStatus,
     setSelectedCardId,
   } = useCreditCards();
   const { categories } = useCategories();
@@ -46,6 +46,14 @@ const CreditCards = () => {
   const [expCategory, setExpCategory] = useState('');
   const [expDate, setExpDate] = useState<Date>(new Date());
   const [expInstallments, setExpInstallments] = useState('1');
+
+  // Edit expense dialog
+  const [editExpenseOpen, setEditExpenseOpen] = useState(false);
+  const [editExpId, setEditExpId] = useState<string | null>(null);
+  const [editExpDesc, setEditExpDesc] = useState('');
+  const [editExpAmount, setEditExpAmount] = useState('');
+  const [editExpCategory, setEditExpCategory] = useState('');
+  const [editExpDate, setEditExpDate] = useState<Date>(new Date());
 
   const expenseCategories = useMemo(() => 
     categories.filter(c => c.type === 'expense'), [categories]
@@ -114,6 +122,26 @@ const CreditCards = () => {
   };
 
   const activeCard = cards.find(c => c.id === selectedCard);
+
+  const handleOpenEditExpense = (exp: typeof expenses[0]) => {
+    setEditExpId(exp.id);
+    setEditExpDesc(exp.description);
+    setEditExpAmount(String(exp.amount));
+    setEditExpCategory(exp.category);
+    setEditExpDate(new Date(exp.date));
+    setEditExpenseOpen(true);
+  };
+
+  const handleEditExpense = async () => {
+    if (!editExpId || !editExpDesc.trim() || !editExpAmount || !selectedBillId) return;
+    await updateExpense(editExpId, selectedBillId, {
+      description: editExpDesc,
+      amount: Number(editExpAmount),
+      category: editExpCategory || 'other-expense',
+      date: editExpDate.toISOString().split('T')[0],
+    });
+    setEditExpenseOpen(false);
+  };
 
   if (loading) {
     return (
@@ -374,11 +402,19 @@ const CreditCards = () => {
                             <TableCell className="text-right font-medium text-danger">
                               {formatCurrency(Number(exp.amount))}
                             </TableCell>
-                            <TableCell>
+                            <TableCell className="flex items-center gap-1">
                               <Button
                                 variant="ghost"
                                 size="icon"
-                                className="text-danger hover:text-danger"
+                                className="h-8 w-8 text-muted-foreground hover:text-foreground"
+                                onClick={() => handleOpenEditExpense(exp)}
+                              >
+                                <Pencil className="h-4 w-4" />
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-8 w-8 text-danger hover:text-danger"
                                 onClick={() => deleteExpense(exp.id, selectedBillId!)}
                               >
                                 <Trash2 className="h-4 w-4" />
@@ -398,6 +434,57 @@ const CreditCards = () => {
             </CardContent>
           </Card>
         )}
+
+        {/* Edit Expense Dialog */}
+        <Dialog open={editExpenseOpen} onOpenChange={setEditExpenseOpen}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Editar Despesa</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label>Descrição</Label>
+                <Input value={editExpDesc} onChange={e => setEditExpDesc(e.target.value)} />
+              </div>
+              <div className="space-y-2">
+                <Label>Valor</Label>
+                <Input type="number" step="0.01" value={editExpAmount} onChange={e => setEditExpAmount(e.target.value)} />
+              </div>
+              <div className="space-y-2">
+                <Label>Categoria</Label>
+                <Select value={editExpCategory} onValueChange={setEditExpCategory}>
+                  <SelectTrigger><SelectValue placeholder="Selecione" /></SelectTrigger>
+                  <SelectContent>
+                    {expenseCategories.map(c => (
+                      <SelectItem key={c.id} value={c.name}>{c.name}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label>Data</Label>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button variant="outline" className={cn("w-full justify-start text-left font-normal")}>
+                      <CalendarIcon className="mr-2 h-4 w-4" />
+                      {format(editExpDate, 'dd/MM/yyyy', { locale: ptBR })}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={editExpDate}
+                      onSelect={(d) => d && setEditExpDate(d)}
+                      initialFocus
+                      className={cn("p-3 pointer-events-auto")}
+                    />
+                  </PopoverContent>
+                </Popover>
+              </div>
+              <Button className="w-full" onClick={handleEditExpense}>Salvar</Button>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );
