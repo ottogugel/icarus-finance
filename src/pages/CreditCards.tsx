@@ -86,26 +86,24 @@ const CreditCards = () => {
     }
   };
 
-  // Auto-select bill when bills or month changes
   const activeBill = currentBill;
 
-  // When currentBill changes, auto-load it
+  // Auto-create/select bill when month or bills change
   useEffect(() => {
+    if (!selectedCard) return;
     if (currentBill) {
       setSelectedBillId(currentBill.id);
       fetchExpenses(currentBill.id);
+    } else {
+      getOrCreateBill(selectedCard, selectedMonth).then(async (billId) => {
+        if (billId) {
+          setSelectedBillId(billId);
+          await fetchBills(selectedCard);
+          await fetchExpenses(billId);
+        }
+      });
     }
-  }, [currentBill?.id]);
-
-  const handleViewBill = async () => {
-    if (!selectedCard) return;
-    const billId = await getOrCreateBill(selectedCard, selectedMonth);
-    if (billId) {
-      setSelectedBillId(billId);
-      await fetchBills(selectedCard);
-      await fetchExpenses(billId);
-    }
-  };
+  }, [currentBill?.id, selectedCard, selectedMonth.getTime()]);
 
   const handleAddCard = async () => {
     if (!cardName.trim()) return;
@@ -281,15 +279,6 @@ const CreditCards = () => {
               </div>
             </CardHeader>
             <CardContent>
-              {/* Auto-load or create bill */}
-              {!selectedBillId && (
-                <div className="text-center py-6">
-                  <Button onClick={handleViewBill}>
-                    Ver / Criar Fatura de {format(selectedMonth, 'MMMM yyyy', { locale: ptBR })}
-                  </Button>
-                </div>
-              )}
-
               {selectedBillId && activeBill && (
                 <div className="space-y-4">
                   {/* Bill Summary */}
