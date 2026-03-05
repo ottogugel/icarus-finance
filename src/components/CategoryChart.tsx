@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import { Transaction, categoryLabels } from '@/lib/finance';
+import { useCategories } from '@/hooks/useCategories';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 
@@ -20,8 +21,23 @@ const COLORS = [
 ];
 
 export function CategoryChart({ transactions }: CategoryChartProps) {
+  const { categories } = useCategories();
+
+  const categoryNameMap = useMemo(() => {
+    const map: Record<string, string> = {};
+    // Add Supabase categories (by ID)
+    categories.forEach((cat) => {
+      map[cat.id] = cat.name;
+    });
+    // Add static fallback labels (by key)
+    Object.entries(categoryLabels).forEach(([key, label]) => {
+      map[key] = label;
+    });
+    return map;
+  }, [categories]);
+
   const chartData = useMemo(() => {
-    const expenses = transactions.filter((transaction) => transaction.type === 'expense');
+    const expenses = transactions.filter((t) => t.type === 'expense');
 
     const categoryTotals = expenses.reduce((acc, transaction) => {
       acc[transaction.category] = (acc[transaction.category] || 0) + transaction.amount;
@@ -30,11 +46,11 @@ export function CategoryChart({ transactions }: CategoryChartProps) {
 
     return Object.entries(categoryTotals)
       .map(([category, value]) => ({
-        name: (categoryLabels[category as keyof typeof categoryLabels] ?? category) || 'Sem categoria',
+        name: categoryNameMap[category] || 'Sem categoria',
         value,
       }))
       .sort((a, b) => b.value - a.value);
-  }, [transactions]);
+  }, [transactions, categoryNameMap]);
 
   if (chartData.length === 0) {
     return (
@@ -67,7 +83,7 @@ export function CategoryChart({ transactions }: CategoryChartProps) {
               dataKey="value"
               label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
             >
-              {chartData.map((entry, index) => (
+              {chartData.map((_, index) => (
                 <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
               ))}
             </Pie>
