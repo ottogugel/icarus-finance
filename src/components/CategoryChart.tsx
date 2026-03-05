@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
-import { Transaction, categoryLabels, expenseCategories } from '@/lib/finance';
+import { Transaction, categoryLabels } from '@/lib/finance';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 
 interface CategoryChartProps {
   transactions: Transaction[];
@@ -21,8 +21,8 @@ const COLORS = [
 
 export function CategoryChart({ transactions }: CategoryChartProps) {
   const chartData = useMemo(() => {
-    const expenses = transactions.filter((t) => t.type === 'expense');
-    
+    const expenses = transactions.filter((transaction) => transaction.type === 'expense');
+
     const categoryTotals = expenses.reduce((acc, transaction) => {
       acc[transaction.category] = (acc[transaction.category] || 0) + transaction.amount;
       return acc;
@@ -30,7 +30,7 @@ export function CategoryChart({ transactions }: CategoryChartProps) {
 
     return Object.entries(categoryTotals)
       .map(([category, value]) => ({
-        name: categoryLabels[category as keyof typeof categoryLabels],
+        name: (categoryLabels[category as keyof typeof categoryLabels] ?? category) || 'Sem categoria',
         value,
       }))
       .sort((a, b) => b.value - a.value);
