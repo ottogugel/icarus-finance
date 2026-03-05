@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { useSupabaseTransactions } from '@/hooks/useSupabaseTransactions';
 import { StatsCard } from '@/components/StatsCard';
 import { TransactionList } from '@/components/TransactionList';
@@ -5,7 +6,33 @@ import { CategoryChart } from '@/components/CategoryChart';
 import { Wallet, TrendingUp, TrendingDown } from 'lucide-react';
 
 const Index = () => {
-  const { transactions, deleteTransaction, stats, loading: transactionsLoading } = useSupabaseTransactions();
+  const { transactions, deleteTransaction, loading: transactionsLoading } = useSupabaseTransactions();
+
+  const currentMonthTransactions = useMemo(() => {
+    const now = new Date();
+    const currentMonth = now.getMonth();
+    const currentYear = now.getFullYear();
+
+    return transactions.filter(
+      (transaction) =>
+        transaction.date.getMonth() === currentMonth &&
+        transaction.date.getFullYear() === currentYear
+    );
+  }, [transactions]);
+
+  const currentMonthStats = useMemo(() => {
+    const income = currentMonthTransactions
+      .filter((transaction) => transaction.type === 'income')
+      .reduce((sum, transaction) => sum + transaction.amount, 0);
+
+    const expenses = currentMonthTransactions
+      .filter((transaction) => transaction.type === 'expense')
+      .reduce((sum, transaction) => sum + transaction.amount, 0);
+
+    const balance = income - expenses;
+
+    return { income, expenses, balance };
+  }, [currentMonthTransactions]);
 
   if (transactionsLoading) {
     return (
@@ -29,16 +56,16 @@ const Index = () => {
         </div>
         {/* Stats Cards */}
         <div className="grid gap-4 md:grid-cols-3 mb-8">
-          <StatsCard title="Saldo Total" value={stats.balance} icon={Wallet} variant="default" />
-          <StatsCard title="Receitas" value={stats.income} icon={TrendingUp} variant="success" />
-          <StatsCard title="Despesas" value={stats.expenses} icon={TrendingDown} variant="danger" />
+          <StatsCard title="Saldo Total" value={currentMonthStats.balance} icon={Wallet} variant="default" />
+          <StatsCard title="Receitas" value={currentMonthStats.income} icon={TrendingUp} variant="success" />
+          <StatsCard title="Despesas" value={currentMonthStats.expenses} icon={TrendingDown} variant="danger" />
         </div>
 
         {/* Chart and Transactions */}
         <div className="grid gap-8 lg:grid-cols-3">
           {/* Chart */}
           <div className="lg:col-span-1">
-            <CategoryChart transactions={transactions} />
+            <CategoryChart transactions={currentMonthTransactions} />
           </div>
 
           {/* Transactions List */}
@@ -56,3 +83,4 @@ const Index = () => {
 };
 
 export default Index;
+
