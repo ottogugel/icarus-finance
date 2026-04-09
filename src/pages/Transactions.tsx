@@ -14,6 +14,7 @@ import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Category, categoryLabels, formatCurrency, TransactionType } from '@/lib/finance';
 import { cn } from '@/lib/utils';
+import { Input } from '@/components/ui/input';
 
 const Transactions = () => {
   const { transactions, addTransaction, deleteTransaction, stats, loading } = useSupabaseTransactions();
