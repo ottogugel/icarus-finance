@@ -131,6 +131,19 @@ const Transactions = () => {
               <CardTitle>Filtros</CardTitle>
             </CardHeader>
             <CardContent>
+              <div className="mb-4">
+                <Label htmlFor="search-filter">Buscar por descrição</Label>
+                <div className="relative mt-2">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    id="search-filter"
+                    placeholder="Digite para buscar..."
+                    value={searchDescription}
+                    onChange={(e) => setSearchDescription(e.target.value)}
+                    className="pl-9"
+                  />
+                </div>
+              </div>
               <div className="grid gap-4 md:grid-cols-4">
                 <div className="space-y-2">
                   <Label htmlFor="type-filter">Tipo</Label>
