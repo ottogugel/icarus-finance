@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { CalendarIcon } from 'lucide-react';
+import { CalendarIcon, Search } from 'lucide-react';
 import { useSupabaseTransactions } from '@/hooks/useSupabaseTransactions';
 import { useSupabaseBanks } from '@/hooks/useSupabaseBanks';
 import { TransactionList } from '@/components/TransactionList';
@@ -14,12 +14,14 @@ import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Category, categoryLabels, formatCurrency, TransactionType } from '@/lib/finance';
 import { cn } from '@/lib/utils';
+import { Input } from '@/components/ui/input';
 
 const Transactions = () => {
   const { transactions, addTransaction, deleteTransaction, stats, loading } = useSupabaseTransactions();
   const { banks } = useSupabaseBanks();
   const [filterType, setFilterType] = useState<'all' | TransactionType>('all');
   const [filterCategory, setFilterCategory] = useState<'all' | Category>('all');
+  const [searchDescription, setSearchDescription] = useState('');
   const [startDate, setStartDate] = useState<Date | undefined>(() => {
     const now = new Date();
     return new Date(now.getFullYear(), now.getMonth(), 1);
@@ -33,6 +35,7 @@ const Transactions = () => {
     return transactions.filter((t) => {
       if (filterType !== 'all' && t.type !== filterType) return false;
       if (filterCategory !== 'all' && t.category !== filterCategory) return false;
+      if (searchDescription && !t.description.toLowerCase().includes(searchDescription.toLowerCase())) return false;
       
       // Date filter
       const transactionDate = new Date(t.date);
@@ -45,7 +48,7 @@ const Transactions = () => {
       
       return true;
     });
-  }, [transactions, filterType, filterCategory, startDate, endDate]);
+  }, [transactions, filterType, filterCategory, startDate, endDate, searchDescription]);
 
   const filteredStats = useMemo(() => {
     const income = filteredTransactions
@@ -128,6 +131,19 @@ const Transactions = () => {
               <CardTitle>Filtros</CardTitle>
             </CardHeader>
             <CardContent>
+              <div className="mb-4">
+                <Label htmlFor="search-filter">Buscar por descrição</Label>
+                <div className="relative mt-2">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    id="search-filter"
+                    placeholder="Digite para buscar..."
+                    value={searchDescription}
+                    onChange={(e) => setSearchDescription(e.target.value)}
+                    className="pl-9"
+                  />
+                </div>
+              </div>
               <div className="grid gap-4 md:grid-cols-4">
                 <div className="space-y-2">
                   <Label htmlFor="type-filter">Tipo</Label>
