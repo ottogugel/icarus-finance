@@ -21,6 +21,7 @@ const Transactions = () => {
   const { banks } = useSupabaseBanks();
   const [filterType, setFilterType] = useState<'all' | TransactionType>('all');
   const [filterCategory, setFilterCategory] = useState<'all' | Category>('all');
+  const [searchDescription, setSearchDescription] = useState('');
   const [startDate, setStartDate] = useState<Date | undefined>(() => {
     const now = new Date();
     return new Date(now.getFullYear(), now.getMonth(), 1);
