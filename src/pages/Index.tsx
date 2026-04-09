@@ -5,7 +5,7 @@ import { CategoryChart } from '@/components/CategoryChart';
 import { Wallet, TrendingUp, TrendingDown } from 'lucide-react';
 
 const Index = () => {
-  const { transactions, deleteTransaction, loading: transactionsLoading } = useSupabaseTransactions();
+  const { transactions, loading: transactionsLoading } = useSupabaseTransactions();
 
   const currentMonthTransactions = useMemo(() => {
     const now = new Date();
@@ -60,21 +60,9 @@ const Index = () => {
           <StatsCard title="Despesas" value={currentMonthStats.expenses} icon={TrendingDown} variant="danger" />
         </div>
 
-        {/* Chart and Transactions */}
-        <div className="grid gap-8 lg:grid-cols-3">
-          {/* Chart */}
-          <div className="lg:col-span-1">
-            <CategoryChart transactions={currentMonthTransactions} />
-          </div>
-
-          {/* Transactions List */}
-          <div className="lg:col-span-2">
-            <div className="mb-4">
-              <h2 className="text-2xl font-bold">Transações Recentes</h2>
-              <p className="text-muted-foreground">Histórico de todas as suas transações</p>
-            </div>
-            <TransactionList transactions={transactions} onDelete={deleteTransaction} />
-          </div>
+        {/* Chart */}
+        <div className="mt-8">
+          <CategoryChart transactions={currentMonthTransactions} />
         </div>
       </div>
     </div>
