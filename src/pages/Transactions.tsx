@@ -35,6 +35,7 @@ const Transactions = () => {
     return transactions.filter((t) => {
       if (filterType !== 'all' && t.type !== filterType) return false;
       if (filterCategory !== 'all' && t.category !== filterCategory) return false;
+      if (searchDescription && !t.description.toLowerCase().includes(searchDescription.toLowerCase())) return false;
       
       // Date filter
       const transactionDate = new Date(t.date);
@@ -47,7 +48,7 @@ const Transactions = () => {
       
       return true;
     });
-  }, [transactions, filterType, filterCategory, startDate, endDate]);
+  }, [transactions, filterType, filterCategory, startDate, endDate, searchDescription]);
 
   const filteredStats = useMemo(() => {
     const income = filteredTransactions
