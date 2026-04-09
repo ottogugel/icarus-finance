@@ -1,7 +1,6 @@
 import { useMemo } from 'react';
 import { useSupabaseTransactions } from '@/hooks/useSupabaseTransactions';
 import { StatsCard } from '@/components/StatsCard';
-import { TransactionList } from '@/components/TransactionList';
 import { CategoryChart } from '@/components/CategoryChart';
 import { Wallet, TrendingUp, TrendingDown } from 'lucide-react';
 
