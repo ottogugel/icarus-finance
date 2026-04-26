@@ -7,7 +7,6 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 // Pages
 import Index from "./pages/Index";
 import Transactions from "./pages/Transactions";
-import Investments from "./pages/Investments";
 import Categories from "./pages/Categories";
 import Goals from "./pages/Goals";
 import Banks from "./pages/Banks";
@@ -32,7 +31,6 @@ const App = () => (
             <Route path="/transactions" element={<Transactions />} />
             <Route path="/banks" element={<Banks />} />
             <Route path="/credit-cards" element={<CreditCards />} />
-            <Route path="/investments" element={<Investments />} />
             <Route path="/categories" element={<Categories />} />
             <Route path="/goals" element={<Goals />} />
             <Route path="/settings" element={<Settings />} />

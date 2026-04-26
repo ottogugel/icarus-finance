@@ -1,4 +1,4 @@
-import { LayoutDashboard, Receipt, TrendingUp, Tag, Target, Building2, Settings, CreditCard } from "lucide-react";
+import { LayoutDashboard, Receipt, Tag, Target, Building2, Settings, CreditCard } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useLocation } from "react-router-dom";
 
@@ -19,7 +19,6 @@ const items = [
   { title: "Transações", url: "/transactions", icon: Receipt },
   { title: "Bancos", url: "/banks", icon: Building2 },
   { title: "Cartões", url: "/credit-cards", icon: CreditCard },
-  { title: "Investimentos", url: "/investments", icon: TrendingUp },
   { title: "Categorias", url: "/categories", icon: Tag },
   { title: "Metas", url: "/goals", icon: Target },
   { title: "Configurações", url: "/settings", icon: Settings },
