@@ -16,7 +16,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Settings as SettingsIcon, User, Palette, Info } from 'lucide-react';
+import { Settings as SettingsIcon, User, Palette } from 'lucide-react';
+
 import { toast } from 'sonner';
 import { useTheme } from 'next-themes';
 
