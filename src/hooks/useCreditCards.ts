@@ -131,18 +131,30 @@ export function useCreditCards() {
       return;
     }
     toast.success('Cartão deletado!');
+  const deleteCard = async (id: string) => {
+    if (!user) return;
+    const { error } = await supabase.from('credit_cards').delete().eq('id', id).eq('user_id', user.id);
+    if (error) {
+      toast.error('Erro ao deletar cartão');
+      console.error(error);
+      return;
+    }
+    toast.success('Cartão deletado!');
     fetchCards();
   };
 
-  const getOrCreateBill = async (cardId: string, referenceMonth: Date): Promise<string | null> => {
-    if (!user) return null;
+  const updateCard = async (id: string, updates: { name?: string; card_limit?: number; closing_day?: number; due_day?: number; color?: string }) => {
+    if (!user) return;
+    const { error } = await supabase.from('credit_cards').update(updates).eq('id', id).eq('user_id', user.id);
+    if (error) {
+      toast.error('Erro ao atualizar cartão');
+      console.error(error);
+      return;
+    }
+    toast.success('Cartão atualizado!');
+    fetchCards();
+  };
 
-    const refDate = new Date(referenceMonth.getFullYear(), referenceMonth.getMonth(), 1);
-    const refStr = refDate.toISOString().split('T')[0];
-
-    // Try to find existing bill
-    const { data: existing } = await supabase
-      .from('credit_card_bills')
       .select('id')
       .eq('credit_card_id', cardId)
       .eq('reference_month', refStr)
