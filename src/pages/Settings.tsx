@@ -249,62 +249,8 @@ export default function Settings() {
           </TabsContent>
 
           {/* Sobre Tab */}
-          <TabsContent value="about" className="space-y-4">
-            <Card>
-              <CardHeader>
-                <CardTitle>Sobre o Icarus Finance</CardTitle>
-                <CardDescription>
-                  Informações sobre o aplicativo
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <Label>Versão</Label>
-                  <p className="text-sm text-muted-foreground">1.1.0</p>
-                </div>
 
-                <div className="space-y-2">
-                  <Label>Descrição</Label>
-                  <p className="text-sm text-muted-foreground">
-                    Icarus Finance é um aplicativo completo para gerenciamento de finanças pessoais.
-                    Acompanhe suas receitas, despesas, metas financeiras e investimentos em um só lugar.
-                  </p>
-                </div>
 
-                <div className="space-y-2">
-                  <Label>Recursos</Label>
-                  <ul className="text-sm text-muted-foreground list-disc list-inside space-y-1">
-                    <li>Dashboard com visão geral das finanças</li>
-                    <li>Registro de transações de receitas e despesas</li>
-                    <li>Metas financeiras por categoria</li>
-                    <li>Gráficos e relatórios</li>
-                    <li>Categorias personalizáveis</li>
-                    <li>Controle de investimentos</li>
-                  </ul>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* <Card>
-              <CardHeader>
-                <CardTitle>Suporte</CardTitle>
-                <CardDescription>
-                  Precisa de ajuda?
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <Button variant="outline" className="w-full">
-                  Central de Ajuda
-                </Button>
-                <Button variant="outline" className="w-full">
-                  Reportar Problema
-                </Button>
-                <Button variant="outline" className="w-full">
-                  Termos de Uso
-                </Button>
-              </CardContent>
-            </Card> */}
-          </TabsContent>
         </Tabs>
       </div>
     </div>
