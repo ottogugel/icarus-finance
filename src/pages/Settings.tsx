@@ -69,7 +69,7 @@ export default function Settings() {
         </div>
 
         <Tabs defaultValue="profile" className="w-full">
-          <TabsList className="grid w-full grid-cols-3">
+          <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="profile" className="gap-2">
               <User className="h-4 w-4" />
               Perfil
@@ -78,11 +78,8 @@ export default function Settings() {
               <Palette className="h-4 w-4" />
               Preferências
             </TabsTrigger>
-            <TabsTrigger value="about" className="gap-2">
-              <Info className="h-4 w-4" />
-              Sobre
-            </TabsTrigger>
           </TabsList>
+
 
           {/* Perfil Tab */}
           <TabsContent value="profile" className="space-y-4">
