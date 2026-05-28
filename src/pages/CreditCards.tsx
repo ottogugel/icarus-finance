@@ -526,6 +526,41 @@ const CreditCards = () => {
             </div>
           </DialogContent>
         </Dialog>
+
+        {/* Edit Card Dialog */}
+        <Dialog open={editCardOpen} onOpenChange={setEditCardOpen}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Editar Cartão</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label>Nome</Label>
+                <Input value={editCardName} onChange={e => setEditCardName(e.target.value)} />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>Dia de Fechamento</Label>
+                  <Input type="number" min="1" max="31" value={editCardClosing} onChange={e => setEditCardClosing(e.target.value)} />
+                </div>
+                <div className="space-y-2">
+                  <Label>Dia de Vencimento</Label>
+                  <Input type="number" min="1" max="31" value={editCardDue} onChange={e => setEditCardDue(e.target.value)} />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label>Limite</Label>
+                <Input type="number" step="0.01" value={editCardLimit} onChange={e => setEditCardLimit(e.target.value)} />
+              </div>
+              <div className="space-y-2">
+                <Label>Cor</Label>
+                <Input type="color" value={editCardColor} onChange={e => setEditCardColor(e.target.value)} className="h-10 w-20" />
+              </div>
+              <Button className="w-full" onClick={handleEditCard}>Salvar</Button>
+            </div>
+          </DialogContent>
+        </Dialog>
+
       </div>
     </div>
   );
