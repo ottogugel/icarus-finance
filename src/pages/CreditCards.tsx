@@ -53,7 +53,17 @@ const CreditCards = () => {
   const [editExpId, setEditExpId] = useState<string | null>(null);
   const [editExpDesc, setEditExpDesc] = useState('');
   const [editExpAmount, setEditExpAmount] = useState('');
-  const [editExpCategory, setEditExpCategory] = useState('');
+  const [editExpDate, setEditExpDate] = useState<Date>(new Date());
+
+  // Edit card dialog
+  const [editCardOpen, setEditCardOpen] = useState(false);
+  const [editCardId, setEditCardId] = useState<string | null>(null);
+  const [editCardName, setEditCardName] = useState('');
+  const [editCardLimit, setEditCardLimit] = useState('');
+  const [editCardClosing, setEditCardClosing] = useState('1');
+  const [editCardDue, setEditCardDue] = useState('10');
+  const [editCardColor, setEditCardColor] = useState('#e11d48');
+
   const [editExpDate, setEditExpDate] = useState<Date>(new Date());
 
   const expenseCategories = useMemo(() => 
