@@ -309,6 +309,8 @@ export function useCreditCards() {
     setSelectedCardId,
     addCard,
     deleteCard,
+    updateCard,
+
     fetchBills,
     fetchExpenses,
     getOrCreateBill,
