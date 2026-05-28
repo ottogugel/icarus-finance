@@ -161,10 +161,6 @@ export function useCreditCards() {
       .eq('user_id', user.id)
       .maybeSingle();
 
-      .eq('credit_card_id', cardId)
-      .eq('reference_month', refStr)
-      .eq('user_id', user.id)
-      .maybeSingle();
 
     if (existing) return existing.id;
 
