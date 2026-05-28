@@ -21,10 +21,11 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 const CreditCards = () => {
   const {
     cards, bills, expenses, loading,
-    addCard, deleteCard, fetchBills, fetchExpenses,
+    addCard, deleteCard, updateCard, fetchBills, fetchExpenses,
     getOrCreateBill, addExpense, updateExpense, deleteExpense, toggleBillStatus,
     setSelectedCardId,
   } = useCreditCards();
+
   const { categories } = useCategories();
 
   const [selectedCard, setSelectedCard] = useState<string | null>(null);
