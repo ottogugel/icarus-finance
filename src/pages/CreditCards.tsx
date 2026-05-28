@@ -160,6 +160,29 @@ const CreditCards = () => {
     setEditExpenseOpen(false);
   };
 
+  const handleOpenEditCard = (card: typeof cards[0]) => {
+    setEditCardId(card.id);
+    setEditCardName(card.name);
+    setEditCardLimit(String(card.card_limit));
+    setEditCardClosing(String(card.closing_day));
+    setEditCardDue(String(card.due_day));
+    setEditCardColor(card.color);
+    setEditCardOpen(true);
+  };
+
+  const handleEditCard = async () => {
+    if (!editCardId || !editCardName.trim()) return;
+    await updateCard(editCardId, {
+      name: editCardName,
+      card_limit: Number(editCardLimit) || 0,
+      closing_day: Number(editCardClosing),
+      due_day: Number(editCardDue),
+      color: editCardColor,
+    });
+    setEditCardOpen(false);
+  };
+
+
   if (loading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
