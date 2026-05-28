@@ -7,6 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+
 import { Switch } from '@/components/ui/switch';
 import {
   Select,
@@ -15,7 +16,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Settings as SettingsIcon, User, Palette, Info } from 'lucide-react';
+import { Settings as SettingsIcon, User, Palette } from 'lucide-react';
+
 import { toast } from 'sonner';
 import { useTheme } from 'next-themes';
 
@@ -68,7 +70,7 @@ export default function Settings() {
         </div>
 
         <Tabs defaultValue="profile" className="w-full">
-          <TabsList className="grid w-full grid-cols-3">
+          <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="profile" className="gap-2">
               <User className="h-4 w-4" />
               Perfil
@@ -77,11 +79,8 @@ export default function Settings() {
               <Palette className="h-4 w-4" />
               Preferências
             </TabsTrigger>
-            <TabsTrigger value="about" className="gap-2">
-              <Info className="h-4 w-4" />
-              Sobre
-            </TabsTrigger>
           </TabsList>
+
 
           {/* Perfil Tab */}
           <TabsContent value="profile" className="space-y-4">
@@ -248,62 +247,8 @@ export default function Settings() {
           </TabsContent>
 
           {/* Sobre Tab */}
-          <TabsContent value="about" className="space-y-4">
-            <Card>
-              <CardHeader>
-                <CardTitle>Sobre o Icarus Finance</CardTitle>
-                <CardDescription>
-                  Informações sobre o aplicativo
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <Label>Versão</Label>
-                  <p className="text-sm text-muted-foreground">1.1.0</p>
-                </div>
 
-                <div className="space-y-2">
-                  <Label>Descrição</Label>
-                  <p className="text-sm text-muted-foreground">
-                    Icarus Finance é um aplicativo completo para gerenciamento de finanças pessoais.
-                    Acompanhe suas receitas, despesas, metas financeiras e investimentos em um só lugar.
-                  </p>
-                </div>
 
-                <div className="space-y-2">
-                  <Label>Recursos</Label>
-                  <ul className="text-sm text-muted-foreground list-disc list-inside space-y-1">
-                    <li>Dashboard com visão geral das finanças</li>
-                    <li>Registro de transações de receitas e despesas</li>
-                    <li>Metas financeiras por categoria</li>
-                    <li>Gráficos e relatórios</li>
-                    <li>Categorias personalizáveis</li>
-                    <li>Controle de investimentos</li>
-                  </ul>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* <Card>
-              <CardHeader>
-                <CardTitle>Suporte</CardTitle>
-                <CardDescription>
-                  Precisa de ajuda?
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <Button variant="outline" className="w-full">
-                  Central de Ajuda
-                </Button>
-                <Button variant="outline" className="w-full">
-                  Reportar Problema
-                </Button>
-                <Button variant="outline" className="w-full">
-                  Termos de Uso
-                </Button>
-              </CardContent>
-            </Card> */}
-          </TabsContent>
         </Tabs>
       </div>
     </div>

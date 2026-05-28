@@ -134,6 +134,18 @@ export function useCreditCards() {
     fetchCards();
   };
 
+  const updateCard = async (id: string, updates: { name?: string; card_limit?: number; closing_day?: number; due_day?: number; color?: string }) => {
+    if (!user) return;
+    const { error } = await supabase.from('credit_cards').update(updates).eq('id', id).eq('user_id', user.id);
+    if (error) {
+      toast.error('Erro ao atualizar cartão');
+      console.error(error);
+      return;
+    }
+    toast.success('Cartão atualizado!');
+    fetchCards();
+  };
+
   const getOrCreateBill = async (cardId: string, referenceMonth: Date): Promise<string | null> => {
     if (!user) return null;
 
@@ -148,6 +160,7 @@ export function useCreditCards() {
       .eq('reference_month', refStr)
       .eq('user_id', user.id)
       .maybeSingle();
+
 
     if (existing) return existing.id;
 
@@ -296,6 +309,8 @@ export function useCreditCards() {
     setSelectedCardId,
     addCard,
     deleteCard,
+    updateCard,
+
     fetchBills,
     fetchExpenses,
     getOrCreateBill,

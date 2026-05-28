@@ -21,10 +21,11 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 const CreditCards = () => {
   const {
     cards, bills, expenses, loading,
-    addCard, deleteCard, fetchBills, fetchExpenses,
+    addCard, deleteCard, updateCard, fetchBills, fetchExpenses,
     getOrCreateBill, addExpense, updateExpense, deleteExpense, toggleBillStatus,
     setSelectedCardId,
   } = useCreditCards();
+
   const { categories } = useCategories();
 
   const [selectedCard, setSelectedCard] = useState<string | null>(null);
@@ -54,6 +55,16 @@ const CreditCards = () => {
   const [editExpAmount, setEditExpAmount] = useState('');
   const [editExpCategory, setEditExpCategory] = useState('');
   const [editExpDate, setEditExpDate] = useState<Date>(new Date());
+
+  // Edit card dialog
+  const [editCardOpen, setEditCardOpen] = useState(false);
+  const [editCardId, setEditCardId] = useState<string | null>(null);
+  const [editCardName, setEditCardName] = useState('');
+  const [editCardLimit, setEditCardLimit] = useState('');
+  const [editCardClosing, setEditCardClosing] = useState('1');
+  const [editCardDue, setEditCardDue] = useState('10');
+  const [editCardColor, setEditCardColor] = useState('#e11d48');
+
 
   const expenseCategories = useMemo(() => 
     categories.filter(c => c.type === 'expense'), [categories]
@@ -149,6 +160,29 @@ const CreditCards = () => {
     setEditExpenseOpen(false);
   };
 
+  const handleOpenEditCard = (card: typeof cards[0]) => {
+    setEditCardId(card.id);
+    setEditCardName(card.name);
+    setEditCardLimit(String(card.card_limit));
+    setEditCardClosing(String(card.closing_day));
+    setEditCardDue(String(card.due_day));
+    setEditCardColor(card.color);
+    setEditCardOpen(true);
+  };
+
+  const handleEditCard = async () => {
+    if (!editCardId || !editCardName.trim()) return;
+    await updateCard(editCardId, {
+      name: editCardName,
+      card_limit: Number(editCardLimit) || 0,
+      closing_day: Number(editCardClosing),
+      due_day: Number(editCardDue),
+      color: editCardColor,
+    });
+    setEditCardOpen(false);
+  };
+
+
   if (loading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
@@ -227,14 +261,24 @@ const CreditCards = () => {
                       </p>
                     </div>
                   </div>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="text-danger hover:text-danger"
-                    onClick={(e) => { e.stopPropagation(); deleteCard(card.id); }}
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
+                  <div className="flex items-center gap-1">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={(e) => { e.stopPropagation(); handleOpenEditCard(card); }}
+                    >
+                      <Pencil className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="text-danger hover:text-danger"
+                      onClick={(e) => { e.stopPropagation(); deleteCard(card.id); }}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
+
                 </div>
                 {card.card_limit > 0 && (
                   <p className="text-xs text-muted-foreground mt-2">
@@ -482,6 +526,41 @@ const CreditCards = () => {
             </div>
           </DialogContent>
         </Dialog>
+
+        {/* Edit Card Dialog */}
+        <Dialog open={editCardOpen} onOpenChange={setEditCardOpen}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Editar Cartão</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label>Nome</Label>
+                <Input value={editCardName} onChange={e => setEditCardName(e.target.value)} />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>Dia de Fechamento</Label>
+                  <Input type="number" min="1" max="31" value={editCardClosing} onChange={e => setEditCardClosing(e.target.value)} />
+                </div>
+                <div className="space-y-2">
+                  <Label>Dia de Vencimento</Label>
+                  <Input type="number" min="1" max="31" value={editCardDue} onChange={e => setEditCardDue(e.target.value)} />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label>Limite</Label>
+                <Input type="number" step="0.01" value={editCardLimit} onChange={e => setEditCardLimit(e.target.value)} />
+              </div>
+              <div className="space-y-2">
+                <Label>Cor</Label>
+                <Input type="color" value={editCardColor} onChange={e => setEditCardColor(e.target.value)} className="h-10 w-20" />
+              </div>
+              <Button className="w-full" onClick={handleEditCard}>Salvar</Button>
+            </div>
+          </DialogContent>
+        </Dialog>
+
       </div>
     </div>
   );
