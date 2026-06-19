@@ -172,14 +172,12 @@ const CreditCards = () => {
     setEditCardAvailable(null);
     setEditCardOpen(true);
 
-    // Calculate available limit: card_limit minus expenses in current and future bills
-    const now = new Date();
-    const startRef = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-01`;
+    // Available limit: card_limit minus expenses from PENDING (unpaid) bills only
     const { data: cardBills } = await supabase
       .from('credit_card_bills')
       .select('id')
       .eq('credit_card_id', card.id)
-      .gte('reference_month', startRef);
+      .eq('status', 'pending');
 
     const billIds = (cardBills || []).map(b => b.id);
     let used = 0;
