@@ -359,6 +359,7 @@ export function useCreditCards() {
     loading,
     selectedCardId,
     setSelectedCardId,
+    availableLimits,
     addCard,
     deleteCard,
     updateCard,
