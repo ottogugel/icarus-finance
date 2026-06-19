@@ -162,14 +162,35 @@ const CreditCards = () => {
     setEditExpenseOpen(false);
   };
 
-  const handleOpenEditCard = (card: typeof cards[0]) => {
+  const handleOpenEditCard = async (card: typeof cards[0]) => {
     setEditCardId(card.id);
     setEditCardName(card.name);
     setEditCardLimit(String(card.card_limit));
     setEditCardClosing(String(card.closing_day));
     setEditCardDue(String(card.due_day));
     setEditCardColor(card.color);
+    setEditCardAvailable(null);
     setEditCardOpen(true);
+
+    // Calculate available limit: card_limit minus expenses in current and future bills
+    const now = new Date();
+    const startRef = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-01`;
+    const { data: cardBills } = await supabase
+      .from('credit_card_bills')
+      .select('id')
+      .eq('credit_card_id', card.id)
+      .gte('reference_month', startRef);
+
+    const billIds = (cardBills || []).map(b => b.id);
+    let used = 0;
+    if (billIds.length > 0) {
+      const { data: exps } = await supabase
+        .from('credit_card_expenses')
+        .select('amount')
+        .in('bill_id', billIds);
+      used = (exps || []).reduce((s, e) => s + Number(e.amount), 0);
+    }
+    setEditCardAvailable(Number(card.card_limit) - used);
   };
 
   const handleEditCard = async () => {
