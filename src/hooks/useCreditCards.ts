@@ -42,6 +42,7 @@ export function useCreditCards() {
   const [expenses, setExpenses] = useState<CreditCardExpense[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedCardId, setSelectedCardId] = useState<string | null>(null);
+  const [availableLimits, setAvailableLimits] = useState<Record<string, number>>({});
 
   const fetchCards = useCallback(async () => {
     if (!user) return;
