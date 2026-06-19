@@ -93,16 +93,67 @@ export function useCreditCards() {
     setExpenses((data || []) as CreditCardExpense[]);
   }, [user]);
 
+  const calculateAvailableLimits = useCallback(async () => {
+    if (!user || cards.length === 0) return;
+    const now = new Date();
+    const startRef = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-01`;
+
+    const { data: allBills } = await supabase
+      .from('credit_card_bills')
+      .select('id, credit_card_id')
+      .eq('user_id', user.id)
+      .gte('reference_month', startRef);
+
+    const allBillIds = (allBills || []).map(b => b.id);
+    if (allBillIds.length === 0) {
+      const limits: Record<string, number> = {};
+      for (const card of cards) limits[card.id] = Number(card.card_limit);
+      setAvailableLimits(limits);
+      return;
+    }
+
+    const { data: allExpenses } = await supabase
+      .from('credit_card_expenses')
+      .select('bill_id, amount')
+      .in('bill_id', allBillIds);
+
+    const expensesByBill: Record<string, number> = {};
+    for (const exp of allExpenses || []) {
+      expensesByBill[exp.bill_id] = (expensesByBill[exp.bill_id] || 0) + Number(exp.amount);
+    }
+
+    const billsByCard: Record<string, string[]> = {};
+    for (const bill of allBills || []) {
+      if (!billsByCard[bill.credit_card_id]) billsByCard[bill.credit_card_id] = [];
+      billsByCard[bill.credit_card_id].push(bill.id);
+    }
+
+    const limits: Record<string, number> = {};
+    for (const card of cards) {
+      const cardBillIds = billsByCard[card.id] || [];
+      const used = cardBillIds.reduce((sum, billId) => sum + (expensesByBill[billId] || 0), 0);
+      limits[card.id] = Number(card.card_limit) - used;
+    }
+    setAvailableLimits(limits);
+  }, [user, cards]);
+
   useEffect(() => {
     if (!user) {
       setCards([]);
       setBills([]);
       setExpenses([]);
+      setAvailableLimits({});
       setLoading(false);
       return;
     }
     fetchCards().then(() => setLoading(false));
   }, [user, fetchCards]);
+
+  useEffect(() => {
+    if (!loading && cards.length > 0) {
+      calculateAvailableLimits();
+    }
+  }, [cards, loading, calculateAvailableLimits]);
 
   const addCard = async (name: string, closingDay: number, dueDay: number, cardLimit: number, color: string) => {
     if (!user) return;
