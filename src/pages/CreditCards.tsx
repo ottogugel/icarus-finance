@@ -17,6 +17,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { supabase } from '@/integrations/supabase/client';
 
 const CreditCards = () => {
   const {
@@ -64,6 +65,7 @@ const CreditCards = () => {
   const [editCardClosing, setEditCardClosing] = useState('1');
   const [editCardDue, setEditCardDue] = useState('10');
   const [editCardColor, setEditCardColor] = useState('#e11d48');
+  const [editCardAvailable, setEditCardAvailable] = useState<number | null>(null);
 
 
   const expenseCategories = useMemo(() => 
@@ -160,14 +162,35 @@ const CreditCards = () => {
     setEditExpenseOpen(false);
   };
 
-  const handleOpenEditCard = (card: typeof cards[0]) => {
+  const handleOpenEditCard = async (card: typeof cards[0]) => {
     setEditCardId(card.id);
     setEditCardName(card.name);
     setEditCardLimit(String(card.card_limit));
     setEditCardClosing(String(card.closing_day));
     setEditCardDue(String(card.due_day));
     setEditCardColor(card.color);
+    setEditCardAvailable(null);
     setEditCardOpen(true);
+
+    // Calculate available limit: card_limit minus expenses in current and future bills
+    const now = new Date();
+    const startRef = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-01`;
+    const { data: cardBills } = await supabase
+      .from('credit_card_bills')
+      .select('id')
+      .eq('credit_card_id', card.id)
+      .gte('reference_month', startRef);
+
+    const billIds = (cardBills || []).map(b => b.id);
+    let used = 0;
+    if (billIds.length > 0) {
+      const { data: exps } = await supabase
+        .from('credit_card_expenses')
+        .select('amount')
+        .in('bill_id', billIds);
+      used = (exps || []).reduce((s, e) => s + Number(e.amount), 0);
+    }
+    setEditCardAvailable(Number(card.card_limit) - used);
   };
 
   const handleEditCard = async () => {
@@ -552,6 +575,14 @@ const CreditCards = () => {
                 <Label>Limite</Label>
                 <Input type="number" step="0.01" value={editCardLimit} onChange={e => setEditCardLimit(e.target.value)} />
               </div>
+              {editCardAvailable !== null && (
+                <div className="p-3 rounded-md bg-muted/50 flex items-center justify-between">
+                  <span className="text-sm text-muted-foreground">Limite disponível</span>
+                  <span className={cn("font-semibold", editCardAvailable < 0 ? "text-danger" : "text-success")}>
+                    {formatCurrency(editCardAvailable)}
+                  </span>
+                </div>
+              )}
               <div className="space-y-2">
                 <Label>Cor</Label>
                 <Input type="color" value={editCardColor} onChange={e => setEditCardColor(e.target.value)} className="h-10 w-20" />
