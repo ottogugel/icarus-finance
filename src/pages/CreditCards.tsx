@@ -24,7 +24,7 @@ const CreditCards = () => {
     cards, bills, expenses, loading,
     addCard, deleteCard, updateCard, fetchBills, fetchExpenses,
     getOrCreateBill, addExpense, updateExpense, deleteExpense, toggleBillStatus,
-    setSelectedCardId,
+    setSelectedCardId, availableLimits,
   } = useCreditCards();
 
   const { categories } = useCategories();
