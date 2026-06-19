@@ -575,6 +575,14 @@ const CreditCards = () => {
                 <Label>Limite</Label>
                 <Input type="number" step="0.01" value={editCardLimit} onChange={e => setEditCardLimit(e.target.value)} />
               </div>
+              {editCardAvailable !== null && (
+                <div className="p-3 rounded-md bg-muted/50 flex items-center justify-between">
+                  <span className="text-sm text-muted-foreground">Limite disponível</span>
+                  <span className={cn("font-semibold", editCardAvailable < 0 ? "text-danger" : "text-success")}>
+                    {formatCurrency(editCardAvailable)}
+                  </span>
+                </div>
+              )}
               <div className="space-y-2">
                 <Label>Cor</Label>
                 <Input type="color" value={editCardColor} onChange={e => setEditCardColor(e.target.value)} className="h-10 w-20" />
