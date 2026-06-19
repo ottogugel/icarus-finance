@@ -304,9 +304,18 @@ const CreditCards = () => {
 
                 </div>
                 {card.card_limit > 0 && (
-                  <p className="text-xs text-muted-foreground mt-2">
-                    Limite: {formatCurrency(card.card_limit)}
-                  </p>
+                  <div className="flex items-center gap-2 mt-2">
+                    <p className="text-xs text-muted-foreground">
+                      Limite: {formatCurrency(card.card_limit)}
+                    </p>
+                    <span className="text-xs text-muted-foreground">·</span>
+                    <p className={cn(
+                      "text-xs font-medium",
+                      (availableLimits[card.id] ?? card.card_limit) >= 0 ? "text-success" : "text-danger"
+                    )}>
+                      Disponível: {formatCurrency(availableLimits[card.id] ?? card.card_limit)}
+                    </p>
+                  </div>
                 )}
               </CardContent>
             </Card>
