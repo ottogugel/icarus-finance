@@ -65,6 +65,7 @@ const CreditCards = () => {
   const [editCardClosing, setEditCardClosing] = useState('1');
   const [editCardDue, setEditCardDue] = useState('10');
   const [editCardColor, setEditCardColor] = useState('#e11d48');
+  const [editCardAvailable, setEditCardAvailable] = useState<number | null>(null);
 
 
   const expenseCategories = useMemo(() => 
