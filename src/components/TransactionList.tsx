@@ -16,9 +16,15 @@ import {
 import { useCategories } from '@/hooks/useCategories';
 import { useMemo } from 'react';
 
+interface Bank {
+  id: string;
+  name: string;
+}
+
 interface TransactionListProps {
   transactions: Transaction[];
   onDelete: (id: string) => void;
+  banks?: Bank[];
 }
 
 export function TransactionList({ transactions, onDelete }: TransactionListProps) {
