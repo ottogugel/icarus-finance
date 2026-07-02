@@ -1,7 +1,7 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { CalendarIcon, Search } from 'lucide-react';
+import { CalendarIcon, Search, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useSupabaseTransactions } from '@/hooks/useSupabaseTransactions';
 import { useSupabaseBanks } from '@/hooks/useSupabaseBanks';
 import { TransactionList } from '@/components/TransactionList';
@@ -22,6 +22,8 @@ const Transactions = () => {
   const [filterType, setFilterType] = useState<'all' | TransactionType>('all');
   const [filterCategory, setFilterCategory] = useState<'all' | Category>('all');
   const [searchDescription, setSearchDescription] = useState('');
+  const [page, setPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
   const [startDate, setStartDate] = useState<Date | undefined>(() => {
     const now = new Date();
     return new Date(now.getFullYear(), now.getMonth(), 1);
@@ -66,6 +68,18 @@ const Transactions = () => {
     return Array.from(new Set(transactions.map((t) => t.category)));
   }, [transactions]);
 
+  const totalFiltered = filteredTransactions.length;
+  const totalPages = Math.max(1, Math.ceil(totalFiltered / itemsPerPage));
+  const paginatedTransactions = useMemo(() => {
+    const start = (page - 1) * itemsPerPage;
+    return filteredTransactions.slice(start, start + itemsPerPage);
+  }, [filteredTransactions, page, itemsPerPage]);
+
+  // Reset to first page when filters change
+  useEffect(() => {
+    setPage(1);
+  }, [filterType, filterCategory, searchDescription, startDate, endDate, itemsPerPage]);
+
   return (
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-8">
@@ -86,17 +100,7 @@ const Transactions = () => {
             <>
 
           {/* Stats Cards */}
-          <div className="grid gap-4 md:grid-cols-3 mb-6">
-            <Card>
-              <CardHeader className="pb-3">
-                <CardTitle className="text-sm font-medium text-muted-foreground">
-                  Total de Transações
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{filteredStats.total}</div>
-              </CardContent>
-            </Card>
+          <div className="grid gap-4 md:grid-cols-2 mb-6">
 
             <Card>
               <CardHeader className="pb-3">
@@ -248,7 +252,58 @@ const Transactions = () => {
           </Card>
 
           {/* Transactions List */}
-          <TransactionList transactions={filteredTransactions} onDelete={deleteTransaction} />
+          <TransactionList transactions={paginatedTransactions} onDelete={deleteTransaction} />
+
+          {/* Pagination */}
+          <div className="mt-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+            <div className="text-sm text-muted-foreground">
+              Total de transações: <span className="font-medium text-foreground">{totalFiltered}</span>
+            </div>
+
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2">
+                <Label htmlFor="items-per-page" className="text-sm text-muted-foreground whitespace-nowrap">
+                  Exibir
+                </Label>
+                <Select
+                  value={String(itemsPerPage)}
+                  onValueChange={(v) => setItemsPerPage(Number(v))}
+                >
+                  <SelectTrigger id="items-per-page" className="w-20">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="10">10</SelectItem>
+                    <SelectItem value="25">25</SelectItem>
+                    <SelectItem value="50">50</SelectItem>
+                    <SelectItem value="100">100</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="flex items-center gap-1">
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={() => setPage((p) => Math.max(1, p - 1))}
+                  disabled={page === 1}
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                </Button>
+                <span className="text-sm px-2">
+                  Página {page} de {totalPages}
+                </span>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                  disabled={page === totalPages}
+                >
+                  <ChevronRight className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+          </div>
           </>
           )}
         </div>
