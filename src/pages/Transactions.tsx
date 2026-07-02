@@ -68,6 +68,18 @@ const Transactions = () => {
     return Array.from(new Set(transactions.map((t) => t.category)));
   }, [transactions]);
 
+  const totalFiltered = filteredTransactions.length;
+  const totalPages = Math.max(1, Math.ceil(totalFiltered / itemsPerPage));
+  const paginatedTransactions = useMemo(() => {
+    const start = (page - 1) * itemsPerPage;
+    return filteredTransactions.slice(start, start + itemsPerPage);
+  }, [filteredTransactions, page, itemsPerPage]);
+
+  // Reset to first page when filters change
+  useMemo(() => {
+    setPage(1);
+  }, [filterType, filterCategory, searchDescription, startDate, endDate, itemsPerPage]);
+
   return (
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-8">
