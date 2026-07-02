@@ -100,17 +100,7 @@ const Transactions = () => {
             <>
 
           {/* Stats Cards */}
-          <div className="grid gap-4 md:grid-cols-3 mb-6">
-            <Card>
-              <CardHeader className="pb-3">
-                <CardTitle className="text-sm font-medium text-muted-foreground">
-                  Total de Transações
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{filteredStats.total}</div>
-              </CardContent>
-            </Card>
+          <div className="grid gap-4 md:grid-cols-2 mb-6">
 
             <Card>
               <CardHeader className="pb-3">
