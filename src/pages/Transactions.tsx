@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { CalendarIcon, Search, ChevronLeft, ChevronRight } from 'lucide-react';
@@ -76,7 +76,7 @@ const Transactions = () => {
   }, [filteredTransactions, page, itemsPerPage]);
 
   // Reset to first page when filters change
-  useMemo(() => {
+  useEffect(() => {
     setPage(1);
   }, [filterType, filterCategory, searchDescription, startDate, endDate, itemsPerPage]);
 
