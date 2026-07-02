@@ -27,7 +27,7 @@ interface TransactionListProps {
   banks?: Bank[];
 }
 
-export function TransactionList({ transactions, onDelete }: TransactionListProps) {
+export function TransactionList({ transactions, onDelete, banks = [] }: TransactionListProps) {
   const { categories } = useCategories();
 
   const categoryNameMap = useMemo(() => {
@@ -37,6 +37,14 @@ export function TransactionList({ transactions, onDelete }: TransactionListProps
     });
     return map;
   }, [categories]);
+
+  const bankNameMap = useMemo(() => {
+    const map: Record<string, string> = {};
+    banks.forEach((b) => {
+      map[b.id] = b.name;
+    });
+    return map;
+  }, [banks]);
 
   if (transactions.length === 0) {
     return (
