@@ -16,12 +16,18 @@ import {
 import { useCategories } from '@/hooks/useCategories';
 import { useMemo } from 'react';
 
+interface Bank {
+  id: string;
+  name: string;
+}
+
 interface TransactionListProps {
   transactions: Transaction[];
   onDelete: (id: string) => void;
+  banks?: Bank[];
 }
 
-export function TransactionList({ transactions, onDelete }: TransactionListProps) {
+export function TransactionList({ transactions, onDelete, banks = [] }: TransactionListProps) {
   const { categories } = useCategories();
 
   const categoryNameMap = useMemo(() => {
@@ -31,6 +37,14 @@ export function TransactionList({ transactions, onDelete }: TransactionListProps
     });
     return map;
   }, [categories]);
+
+  const bankNameMap = useMemo(() => {
+    const map: Record<string, string> = {};
+    banks.forEach((b) => {
+      map[b.id] = b.name;
+    });
+    return map;
+  }, [banks]);
 
   if (transactions.length === 0) {
     return (
@@ -54,6 +68,7 @@ export function TransactionList({ transactions, onDelete }: TransactionListProps
               <TableHead>Data</TableHead>
               <TableHead>Descrição</TableHead>
               <TableHead>Categoria</TableHead>
+              <TableHead>Banco</TableHead>
               <TableHead>Tipo</TableHead>
               <TableHead className="text-right">Valor</TableHead>
               <TableHead className="text-right">Ações</TableHead>
@@ -67,6 +82,9 @@ export function TransactionList({ transactions, onDelete }: TransactionListProps
                 </TableCell>
                 <TableCell className="font-medium">{transaction.description}</TableCell>
                 <TableCell>{categoryNameMap[transaction.category] || 'Sem categoria'}</TableCell>
+                <TableCell className="whitespace-nowrap">
+                  {transaction.bank_id ? bankNameMap[transaction.bank_id] || 'Banco não encontrado' : '—'}
+                </TableCell>
                 <TableCell>
                   <span
                     className={cn(
