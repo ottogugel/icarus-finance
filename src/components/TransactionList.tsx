@@ -82,6 +82,9 @@ export function TransactionList({ transactions, onDelete, banks = [] }: Transact
                 </TableCell>
                 <TableCell className="font-medium">{transaction.description}</TableCell>
                 <TableCell>{categoryNameMap[transaction.category] || 'Sem categoria'}</TableCell>
+                <TableCell className="whitespace-nowrap">
+                  {transaction.bank_id ? bankNameMap[transaction.bank_id] || 'Banco não encontrado' : '—'}
+                </TableCell>
                 <TableCell>
                   <span
                     className={cn(
