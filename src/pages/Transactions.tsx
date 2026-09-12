@@ -1,7 +1,7 @@
 import { useState, useMemo, useEffect } from 'react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { CalendarIcon, Search, ChevronLeft, ChevronRight } from 'lucide-react';
+import { CalendarIcon, Search, ChevronLeft, ChevronRight, ChevronDown, ChevronUp } from 'lucide-react';
 import { useSupabaseTransactions } from '@/hooks/useSupabaseTransactions';
 import { useSupabaseBanks } from '@/hooks/useSupabaseBanks';
 import { TransactionList } from '@/components/TransactionList';
@@ -32,6 +32,7 @@ const Transactions = () => {
     const now = new Date();
     return new Date(now.getFullYear(), now.getMonth() + 1, 0);
   });
+  const [filtersExpanded, setFiltersExpanded] = useState(false);
 
   const filteredTransactions = useMemo(() => {
     return transactions.filter((t) => {
@@ -101,9 +102,20 @@ const Transactions = () => {
 
           {/* Filters */}
           <Card className="mb-6">
-            <CardHeader>
-              <CardTitle>Filtros</CardTitle>
+            <CardHeader
+              className="cursor-pointer hover:bg-muted/50 transition-colors"
+              onClick={() => setFiltersExpanded((v) => !v)}
+            >
+              <div className="flex items-center justify-between">
+                <CardTitle>Filtros</CardTitle>
+                {filtersExpanded ? (
+                  <ChevronUp className="h-5 w-5 text-muted-foreground" />
+                ) : (
+                  <ChevronDown className="h-5 w-5 text-muted-foreground" />
+                )}
+              </div>
             </CardHeader>
+            {filtersExpanded && (
             <CardContent>
               <div className="mb-4">
                 <Label htmlFor="search-filter">Buscar por descrição</Label>
@@ -219,6 +231,7 @@ const Transactions = () => {
                 </Button>
               )}
             </CardContent>
+            )}
           </Card>
 
           {/* Transactions List */}
