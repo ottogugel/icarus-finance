@@ -1,7 +1,7 @@
 import { useState, useMemo, useEffect } from 'react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { CalendarIcon, Search, ChevronLeft, ChevronRight } from 'lucide-react';
+import { CalendarIcon, Search, ChevronLeft, ChevronRight, ChevronDown, ChevronUp } from 'lucide-react';
 import { useSupabaseTransactions } from '@/hooks/useSupabaseTransactions';
 import { useSupabaseBanks } from '@/hooks/useSupabaseBanks';
 import { TransactionList } from '@/components/TransactionList';
