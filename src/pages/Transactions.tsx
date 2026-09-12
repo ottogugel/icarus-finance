@@ -32,6 +32,7 @@ const Transactions = () => {
     const now = new Date();
     return new Date(now.getFullYear(), now.getMonth() + 1, 0);
   });
+  const [filtersExpanded, setFiltersExpanded] = useState(false);
 
   const filteredTransactions = useMemo(() => {
     return transactions.filter((t) => {
