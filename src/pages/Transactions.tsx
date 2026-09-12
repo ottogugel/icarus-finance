@@ -102,9 +102,20 @@ const Transactions = () => {
 
           {/* Filters */}
           <Card className="mb-6">
-            <CardHeader>
-              <CardTitle>Filtros</CardTitle>
+            <CardHeader
+              className="cursor-pointer hover:bg-muted/50 transition-colors"
+              onClick={() => setFiltersExpanded((v) => !v)}
+            >
+              <div className="flex items-center justify-between">
+                <CardTitle>Filtros</CardTitle>
+                {filtersExpanded ? (
+                  <ChevronUp className="h-5 w-5 text-muted-foreground" />
+                ) : (
+                  <ChevronDown className="h-5 w-5 text-muted-foreground" />
+                )}
+              </div>
             </CardHeader>
+            {filtersExpanded && (
             <CardContent>
               <div className="mb-4">
                 <Label htmlFor="search-filter">Buscar por descrição</Label>
