@@ -274,6 +274,35 @@ const Transactions = () => {
               </div>
             </div>
           </div>
+
+          {/* Stats Cards */}
+          <div className="grid gap-4 md:grid-cols-2 mt-6">
+            <Card>
+              <CardHeader className="pb-3">
+                <CardTitle className="text-sm font-medium text-muted-foreground">
+                  Total de Receitas
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-success">
+                  {formatCurrency(filteredStats.income)}
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className="pb-3">
+                <CardTitle className="text-sm font-medium text-muted-foreground">
+                  Total de Despesas
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-danger">
+                  {formatCurrency(filteredStats.expenses)}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
           </>
           )}
         </div>
