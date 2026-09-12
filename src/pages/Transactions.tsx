@@ -231,6 +231,7 @@ const Transactions = () => {
                 </Button>
               )}
             </CardContent>
+            )}
           </Card>
 
           {/* Transactions List */}
