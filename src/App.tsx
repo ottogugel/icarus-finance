@@ -11,6 +11,7 @@ import Categories from "./pages/Categories";
 import Goals from "./pages/Goals";
 import Banks from "./pages/Banks";
 import CreditCards from "./pages/CreditCards";
+import CreditCardDetail from "./pages/CreditCardDetail";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 import Layout from "./Layout";
@@ -31,6 +32,7 @@ const App = () => (
             <Route path="/transactions" element={<Transactions />} />
             <Route path="/banks" element={<Banks />} />
             <Route path="/credit-cards" element={<CreditCards />} />
+            <Route path="/credit-cards/:id" element={<CreditCardDetail />} />
             <Route path="/categories" element={<Categories />} />
             <Route path="/goals" element={<Goals />} />
             <Route path="/settings" element={<Settings />} />
