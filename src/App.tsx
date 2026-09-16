@@ -11,6 +11,7 @@ import Categories from "./pages/Categories";
 import Goals from "./pages/Goals";
 import Banks from "./pages/Banks";
 import CreditCards from "./pages/CreditCards";
+import CreditCardDetail from "./pages/CreditCardDetail";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 import Layout from "./Layout";
