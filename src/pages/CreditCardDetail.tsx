@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { format, addMonths, subMonths } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
@@ -73,29 +73,34 @@ const CreditCardDetail = () => {
     [expenses]
   );
 
-  // Load bills for this card
+  // Load bills for this card (re-runs once the user session is ready)
   useEffect(() => {
     if (!id) return;
     setSelectedCardId(id);
     fetchBills(id);
-  }, [id]);
+  }, [id, fetchBills]);
 
   // Auto-create/select bill when month or bills change
+  const creatingRef = useRef<string | null>(null);
   useEffect(() => {
-    if (!id || loading) return;
+    if (!id || loading || cards.length === 0) return;
     if (currentBill) {
+      creatingRef.current = null;
       setSelectedBillId(currentBill.id);
       fetchExpenses(currentBill.id);
-    } else {
-      getOrCreateBill(id, selectedMonth).then(async (billId) => {
-        if (billId) {
-          setSelectedBillId(billId);
-          await fetchBills(id);
-          await fetchExpenses(billId);
-        }
-      });
+      return;
     }
-  }, [currentBill?.id, id, selectedMonth.getTime(), loading]);
+    const monthKey = `${id}-${selectedMonth.getFullYear()}-${selectedMonth.getMonth()}`;
+    if (creatingRef.current === monthKey) return;
+    creatingRef.current = monthKey;
+    getOrCreateBill(id, selectedMonth).then(async (billId) => {
+      if (billId) {
+        setSelectedBillId(billId);
+        await fetchBills(id);
+        await fetchExpenses(billId);
+      }
+    });
+  }, [currentBill?.id, id, selectedMonth.getTime(), loading, cards.length, bills.length, fetchBills, fetchExpenses]);
 
   const handleMonthChange = (direction: 'prev' | 'next') => {
     const newMonth = direction === 'prev' ? subMonths(selectedMonth, 1) : addMonths(selectedMonth, 1);
