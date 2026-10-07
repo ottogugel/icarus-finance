@@ -162,26 +162,26 @@ const CreditCardDetail = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-8">
-        <Button variant="ghost" className="mb-4 gap-2" onClick={() => navigate('/credit-cards')}>
+      <div className="container mx-auto px-4 py-5 sm:py-8">
+        <Button variant="ghost" className="mb-4 h-10 gap-2 px-2" onClick={() => navigate('/credit-cards')}>
           <ArrowLeft className="h-4 w-4" /> Voltar
         </Button>
 
         {/* Card header */}
-        <div className="flex items-center justify-between mb-6 flex-wrap gap-4">
-          <div className="flex items-center gap-3">
+        <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex min-w-0 items-center gap-3">
             <div className="h-12 w-12 rounded-full flex items-center justify-center" style={{ backgroundColor: activeCard.color }}>
               <CreditCardIcon className="h-6 w-6 text-white" />
             </div>
-            <div>
-              <h1 className="text-2xl font-bold">{activeCard.name}</h1>
+            <div className="min-w-0">
+              <h1 className="truncate text-2xl font-bold">{activeCard.name}</h1>
               <p className="text-sm text-muted-foreground">
                 Fecha dia {activeCard.closing_day} · Vence dia {activeCard.due_day}
               </p>
             </div>
           </div>
           {activeCard.card_limit > 0 && (
-            <div className="flex items-center gap-4 text-sm">
+            <div className="grid grid-cols-2 gap-3 text-sm sm:flex sm:items-center sm:gap-4">
               <span className="text-muted-foreground">
                 Limite: <span className="font-medium text-foreground">{formatCurrency(activeCard.card_limit)}</span>
               </span>
@@ -194,17 +194,17 @@ const CreditCardDetail = () => {
 
         {/* Bill Section */}
         <Card>
-          <CardHeader>
-            <div className="flex items-center justify-between">
+          <CardHeader className="px-4 sm:px-6">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <CardTitle className="flex items-center gap-2">
                 <CreditCardIcon className="h-5 w-5" />
                 Fatura
               </CardTitle>
-              <div className="flex items-center gap-2">
+              <div className="grid grid-cols-[40px_1fr_40px] items-center gap-2">
                 <Button variant="outline" size="icon" onClick={() => handleMonthChange('prev')}>
                   <ChevronLeft className="h-4 w-4" />
                 </Button>
-                <span className="text-sm font-medium min-w-[140px] text-center capitalize">
+                <span className="min-w-0 text-center text-sm font-medium capitalize">
                   {format(selectedMonth, 'MMMM yyyy', { locale: ptBR })}
                 </span>
                 <Button variant="outline" size="icon" onClick={() => handleMonthChange('next')}>
@@ -213,11 +213,11 @@ const CreditCardDetail = () => {
               </div>
             </div>
           </CardHeader>
-          <CardContent>
+          <CardContent className="px-4 sm:px-6">
             {selectedBillId && currentBill && (
               <div className="space-y-4">
                 {/* Bill Summary */}
-                <div className="flex items-center justify-between p-4 rounded-lg bg-muted/50">
+                <div className="grid grid-cols-2 gap-4 rounded-lg bg-muted/50 p-4 sm:grid-cols-3 sm:items-center">
                   <div>
                     <p className="text-sm text-muted-foreground">Total da Fatura</p>
                     <p className="text-2xl font-bold text-danger">{formatCurrency(totalExpenses)}</p>
@@ -226,7 +226,7 @@ const CreditCardDetail = () => {
                     <p className="text-sm text-muted-foreground">Vencimento</p>
                     <p className="font-medium">{format(new Date(currentBill.due_date), 'dd/MM/yyyy')}</p>
                   </div>
-                  <div className="flex flex-col items-center gap-1">
+                  <div className="col-span-2 flex flex-col items-start gap-1 border-t pt-3 sm:col-span-1 sm:items-center sm:border-0 sm:pt-0">
                     <Badge variant={currentBill.status === 'paid' ? 'default' : 'destructive'} className={currentBill.status === 'paid' ? 'bg-success text-success-foreground' : ''}>
                       {currentBill.status === 'paid' ? (
                         <><CheckCircle className="h-3 w-3 mr-1" /> Paga</>
@@ -241,10 +241,10 @@ const CreditCardDetail = () => {
                 </div>
 
                 {/* Add Expense */}
-                <div className="flex justify-end">
+                <div className="flex justify-stretch sm:justify-end">
                   <Dialog open={addExpenseOpen} onOpenChange={setAddExpenseOpen}>
                     <DialogTrigger asChild>
-                      <Button size="sm"><Plus className="h-4 w-4 mr-1" /> Adicionar Despesa</Button>
+                      <Button size="sm" className="w-full sm:w-auto"><Plus className="h-4 w-4 mr-1" /> Adicionar Despesa</Button>
                     </DialogTrigger>
                     <DialogContent>
                       <DialogHeader>
@@ -307,6 +307,27 @@ const CreditCardDetail = () => {
 
                 {/* Expenses Table */}
                 {expenses.length > 0 ? (
+                  <div className="space-y-3 md:hidden">
+                    {expenses.map(exp => (
+                      <div key={exp.id} className="rounded-md border p-3">
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="min-w-0">
+                            <p className="truncate font-medium">{exp.description}</p>
+                            <p className="mt-1 text-xs text-muted-foreground">{format(new Date(exp.date), 'dd/MM/yyyy')} · {exp.category}</p>
+                          </div>
+                          <p className="shrink-0 font-semibold text-danger">{formatCurrency(Number(exp.amount))}</p>
+                        </div>
+                        <div className="mt-3 flex items-center justify-between border-t pt-2">
+                          <span className="text-xs text-muted-foreground">{exp.installments > 1 ? `Parcela ${exp.current_installment}/${exp.installments}` : 'À vista'}</span>
+                          <div className="flex items-center gap-1">
+                            <Button variant="ghost" size="icon" aria-label={`Editar ${exp.description}`} className="h-10 w-10" onClick={() => handleOpenEditExpense(exp)}><Pencil className="h-4 w-4" /></Button>
+                            <Button variant="ghost" size="icon" aria-label={`Excluir ${exp.description}`} className="h-10 w-10 text-danger hover:text-danger" onClick={() => selectedBillId && deleteExpense(exp.id, selectedBillId)}><Trash2 className="h-4 w-4" /></Button>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="hidden overflow-x-auto md:block">
                   <Table>
                     <TableHeader>
                       <TableRow>
@@ -347,7 +368,7 @@ const CreditCardDetail = () => {
                               variant="ghost"
                               size="icon"
                               className="h-8 w-8 text-danger hover:text-danger"
-                              onClick={() => deleteExpense(exp.id, selectedBillId!)}
+                              onClick={() => selectedBillId && deleteExpense(exp.id, selectedBillId)}
                             >
                               <Trash2 className="h-4 w-4" />
                             </Button>
@@ -356,6 +377,7 @@ const CreditCardDetail = () => {
                       ))}
                     </TableBody>
                   </Table>
+                  </div>
                 ) : (
                   <div className="text-center py-8 text-muted-foreground">
                     <p>Nenhuma despesa nesta fatura</p>
