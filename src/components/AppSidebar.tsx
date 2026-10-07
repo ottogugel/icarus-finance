@@ -25,7 +25,7 @@ const items = [
 ];
 
 export function AppSidebar() {
-  const { state } = useSidebar();
+  const { state, isMobile, setOpenMobile } = useSidebar();
   const location = useLocation();
   const currentPath = location.pathname;
 
@@ -35,7 +35,7 @@ export function AppSidebar() {
 
   return (
     <Sidebar
-      className={collapsed ? "w-14" : "w-60"}
+      className={collapsed && !isMobile ? "w-14" : "w-60"}
       collapsible="icon"
     >
       <SidebarContent>
@@ -54,9 +54,10 @@ export function AppSidebar() {
                       end={item.url === "/"}
                       className="hover:bg-muted/50" 
                       activeClassName="bg-muted text-primary font-medium"
+                      onClick={() => isMobile && setOpenMobile(false)}
                     >
                       <item.icon className="h-5 w-5" />
-                      {!collapsed && <span>{item.title}</span>}
+                      {(!collapsed || isMobile) && <span>{item.title}</span>}
                     </NavLink>
                   </SidebarMenuButton>
                 </SidebarMenuItem>

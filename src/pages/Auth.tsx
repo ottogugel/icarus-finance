@@ -3,14 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { DollarSign } from "lucide-react";
+import { DollarSign, LockKeyhole } from "lucide-react";
 import Login from "@/assets/lottie/login.json";
 import Lottie from "lottie-react";
 import { supabase } from "@/integrations/supabase/client";
@@ -113,56 +106,46 @@ export default function Auth() {
   // RETURN DO COMPONENTE
   // -------------------------
   return (
-    <div className="min-h-screen bg-background flex">
+    <div className="relative flex min-h-[100svh] overflow-hidden bg-background">
       {/* Left Panel */}
-      <div className="hidden lg:flex lg:flex-1 relative overflow-hidden items-center justify-center">
-        <div className="absolute inset-0 bg-cover bg-center bg-no-repeat" />
-        <div className="absolute inset-0 bg-gradient-to-br from-green-800/80 via-green-900/70"></div>
-        <div className="absolute inset-0 bg-black/20"></div>
+      <div className="relative hidden overflow-hidden bg-auth-panel lg:flex lg:flex-1 lg:items-center lg:justify-center">
 
         {/* Container que centraliza + define limite de tamanho */}
         <div className="relative z-10 flex items-center justify-center">
           <Lottie
             animationData={Login}
             loop={true}
-            className="w-[500px] h-[500px]"
+            className="h-[min(52vw,520px)] w-[min(52vw,520px)]"
           />
         </div>
       </div>
 
       {/* Auth Form */}
-      <div className="flex-1 lg:flex-none lg:w-[480px] flex items-center justify-center p-8 bg-background">
-        <div className="w-full max-w-md">
-          <div className="flex justify-center mb-8">
-            <div className="flex items-center justify-center h-16 w-16 rounded-2xl bg-gradient-to-br from-green-500 to-green-700 shadow-lg">
-              <DollarSign className="h-10 w-10 text-white" />
+      <div className="relative z-10 flex flex-1 items-center justify-center px-5 py-8 sm:px-8 lg:w-[500px] lg:flex-none">
+        <div className="w-full max-w-[400px]">
+          <div className="mb-8 flex flex-col items-center text-center sm:mb-10">
+            <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-success text-success-foreground shadow-elevated">
+              <DollarSign className="h-9 w-9" />
             </div>
+            <h1 className="text-2xl font-bold">Bem-vindo de volta</h1>
+            <p className="mt-1 text-sm text-muted-foreground">Acesse sua conta financeira</p>
           </div>
 
-          <Card className="border-0 shadow-2xl bg-background/80 backdrop-blur-sm">
-            <CardHeader className="text-center pb-6">
-              <CardTitle className="text-2xl font-bold bg-gradient-to-r from-green-600 to-green-800 bg-clip-text text-transparent">
-                <span className="flex justify-center">
-                  <p className="text-green-700">Bem</p>
-                  <p className="text-green-600">-vindo!</p>
-                </span>
-              </CardTitle>
-              <CardDescription className="text-base">
-                Faça login com sua conta para começar.
-              </CardDescription>
-            </CardHeader>
-
-            <CardContent className="space-y-6">
+          <div className="rounded-2xl border border-border/70 bg-card/80 p-5 shadow-elevated backdrop-blur-xl sm:p-8">
               {/* LOGIN */}
-              <form onSubmit={handleSignIn} className="space-y-4">
+              <form onSubmit={handleSignIn} className="space-y-5">
                 <div className="space-y-2">
                   <Label htmlFor="signin-email">Email</Label>
                   <Input
                     id="signin-email"
                     name="email"
                     type="email"
+                    autoComplete="email"
+                    inputMode="email"
+                    placeholder="seu@email.com"
                     required
                     disabled={isLoading}
+                    className="h-12 bg-muted/50 px-4 text-base sm:text-sm"
                   />
                 </div>
 
@@ -172,15 +155,18 @@ export default function Auth() {
                     id="signin-password"
                     name="password"
                     type="password"
+                    autoComplete="current-password"
+                    placeholder="••••••••"
                     required
                     disabled={isLoading}
+                    className="h-12 bg-muted/50 px-4 text-base sm:text-sm"
                   />
                 </div>
 
                 <Button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full h-11 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-medium shadow-lg"
+                  className="h-12 w-full bg-success font-semibold text-success-foreground shadow-card hover:bg-success/90"
                 >
                   {isLoading ? "Entrando..." : "Entrar"}
                 </Button>
@@ -240,8 +226,11 @@ export default function Auth() {
               </Tabs>
               FIM DO SIGNUP COMENTADO */}
 
-            </CardContent>
-          </Card>
+          </div>
+          <div className="mt-6 flex items-center justify-center gap-2 text-xs text-muted-foreground">
+            <LockKeyhole className="h-4 w-4" />
+            <span>Acesso seguro às suas finanças</span>
+          </div>
         </div>
       </div>
     </div>
