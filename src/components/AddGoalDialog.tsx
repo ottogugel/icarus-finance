@@ -36,7 +36,7 @@ export function AddGoalDialog({ onAdd }: AddGoalDialogProps) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>
+        <Button className="w-full sm:w-auto">
           <Target className="mr-2 h-4 w-4" />
           Nova Meta
         </Button>

@@ -34,10 +34,7 @@ export function AppSidebar() {
   const collapsed = state === "collapsed";
 
   return (
-    <Sidebar
-      className={collapsed && !isMobile ? "w-14" : "w-60"}
-      collapsible="icon"
-    >
+    <Sidebar collapsible="icon">
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupLabel className={collapsed ? "sr-only" : ""}>

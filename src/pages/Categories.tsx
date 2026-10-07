@@ -179,13 +179,13 @@ export default function Categories() {
           <div className="space-y-2">
             {incomeCategories.map((category) => (
               <Card key={category.id} className="p-4 hover:shadow-md transition-shadow">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
+                <div className="flex items-center justify-between gap-2">
+                  <div className="flex min-w-0 items-center gap-3">
                     {category.icon && <span className="text-2xl">{category.icon}</span>}
-                    <span className="font-medium text-foreground">{category.name}</span>
+                    <span className="break-words font-medium text-foreground">{category.name}</span>
                   </div>
 
-                  <div className="flex gap-2">
+                  <div className="flex shrink-0 gap-1 sm:gap-2">
                     <Button
                       variant="ghost"
                       size="icon"
@@ -224,13 +224,13 @@ export default function Categories() {
           <div className="space-y-2">
             {expenseCategories.map((category) => (
               <Card key={category.id} className="p-4 hover:shadow-md transition-shadow">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
+                <div className="flex items-center justify-between gap-2">
+                  <div className="flex min-w-0 items-center gap-3">
                     {category.icon && <span className="text-2xl">{category.icon}</span>}
-                    <span className="font-medium text-foreground">{category.name}</span>
+                    <span className="break-words font-medium text-foreground">{category.name}</span>
                   </div>
 
-                  <div className="flex gap-2">
+                  <div className="flex shrink-0 gap-1 sm:gap-2">
                     <Button
                       variant="ghost"
                       size="icon"

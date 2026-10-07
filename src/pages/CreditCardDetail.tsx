@@ -307,6 +307,7 @@ const CreditCardDetail = () => {
 
                 {/* Expenses Table */}
                 {expenses.length > 0 ? (
+                  <>
                   <div className="space-y-3 md:hidden">
                     {expenses.map(exp => (
                       <div key={exp.id} className="rounded-md border p-3">
@@ -378,6 +379,7 @@ const CreditCardDetail = () => {
                     </TableBody>
                   </Table>
                   </div>
+                  </>
                 ) : (
                   <div className="text-center py-8 text-muted-foreground">
                     <p>Nenhuma despesa nesta fatura</p>
