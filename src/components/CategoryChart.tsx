@@ -55,8 +55,8 @@ export function CategoryChart({ transactions }: CategoryChartProps) {
   if (chartData.length === 0) {
     return (
       <Card>
-        <CardHeader>
-          <CardTitle>Gastos por Categoria</CardTitle>
+        <CardHeader className="px-4 sm:px-6">
+          <CardTitle className="text-base sm:text-lg">Gastos por Categoria</CardTitle>
         </CardHeader>
         <CardContent className="flex items-center justify-center h-[300px]">
           <p className="text-muted-foreground">Sem dados para exibir</p>
@@ -67,21 +67,21 @@ export function CategoryChart({ transactions }: CategoryChartProps) {
 
   return (
     <Card>
-      <CardHeader>
-        <CardTitle>Gastos por Categoria</CardTitle>
+      <CardHeader className="px-4 sm:px-6">
+        <CardTitle className="text-base sm:text-lg">Gastos por Categoria</CardTitle>
       </CardHeader>
-      <CardContent>
-        <ResponsiveContainer width="100%" height={300}>
+      <CardContent className="px-1 sm:px-6">
+        <ResponsiveContainer width="100%" height={280}>
           <PieChart>
             <Pie
               data={chartData}
               cx="50%"
               cy="50%"
               labelLine={false}
-              outerRadius={80}
+              outerRadius="62%"
               fill="#8884d8"
               dataKey="value"
-              label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+              label={({ percent }) => `${(percent * 100).toFixed(0)}%`}
             >
               {chartData.map((_, index) => (
                 <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />

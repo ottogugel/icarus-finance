@@ -26,21 +26,21 @@ export function GoalsList({ goals, onAddGoal, onDeleteGoal }: GoalsListProps) {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h2 className="text-2xl font-bold">Suas Metas</h2>
+          <h2 className="text-xl font-bold sm:text-2xl">Suas Metas</h2>
           <p className="text-muted-foreground">Acompanhe o progresso das suas metas</p>
         </div>
         <AddGoalDialog onAdd={onAddGoal} />
       </div>
 
       <Tabs defaultValue="active" className="w-full">
-        <TabsList className="grid w-full max-w-md grid-cols-2">
-          <TabsTrigger value="active" className="flex items-center gap-2">
+        <TabsList className="grid h-auto w-full max-w-md grid-cols-2">
+          <TabsTrigger value="active" className="flex min-w-0 items-center gap-1 px-2 sm:gap-2">
             <Target className="h-4 w-4" />
             Ativas ({activeGoals.length})
           </TabsTrigger>
-          <TabsTrigger value="completed" className="flex items-center gap-2">
+          <TabsTrigger value="completed" className="flex min-w-0 items-center gap-1 px-2 sm:gap-2">
             <Trophy className="h-4 w-4" />
             Concluídas ({completedGoals.length})
           </TabsTrigger>
