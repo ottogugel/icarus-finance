@@ -95,10 +95,10 @@ export default function Categories() {
   }
 
   return (
-    <div className="container mx-auto py-8 px-4 max-w-6xl">
-      <div className="flex items-center justify-between mb-8">
+    <div className="container mx-auto max-w-6xl px-4 py-5 sm:py-8">
+      <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-foreground">Categorias</h1>
+          <h1 className="text-2xl font-bold text-foreground sm:text-3xl">Categorias</h1>
           <p className="text-muted-foreground mt-1">
             Gerencie suas categorias de receitas e despesas
           </p>
@@ -106,7 +106,7 @@ export default function Categories() {
 
         <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
           <DialogTrigger asChild>
-            <Button>
+            <Button className="w-full sm:w-auto">
               <Plus className="h-4 w-4 mr-2" />
               Nova Categoria
             </Button>
@@ -179,13 +179,13 @@ export default function Categories() {
           <div className="space-y-2">
             {incomeCategories.map((category) => (
               <Card key={category.id} className="p-4 hover:shadow-md transition-shadow">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
+                <div className="flex items-center justify-between gap-2">
+                  <div className="flex min-w-0 items-center gap-3">
                     {category.icon && <span className="text-2xl">{category.icon}</span>}
-                    <span className="font-medium text-foreground">{category.name}</span>
+                    <span className="break-words font-medium text-foreground">{category.name}</span>
                   </div>
 
-                  <div className="flex gap-2">
+                  <div className="flex shrink-0 gap-1 sm:gap-2">
                     <Button
                       variant="ghost"
                       size="icon"
@@ -224,13 +224,13 @@ export default function Categories() {
           <div className="space-y-2">
             {expenseCategories.map((category) => (
               <Card key={category.id} className="p-4 hover:shadow-md transition-shadow">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
+                <div className="flex items-center justify-between gap-2">
+                  <div className="flex min-w-0 items-center gap-3">
                     {category.icon && <span className="text-2xl">{category.icon}</span>}
-                    <span className="font-medium text-foreground">{category.name}</span>
+                    <span className="break-words font-medium text-foreground">{category.name}</span>
                   </div>
 
-                  <div className="flex gap-2">
+                  <div className="flex shrink-0 gap-1 sm:gap-2">
                     <Button
                       variant="ghost"
                       size="icon"

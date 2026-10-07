@@ -78,7 +78,7 @@ export function AddTransactionDialog({ onAdd, banks = [] }: AddTransactionDialog
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button size="lg" className="gap-2">
+        <Button size="lg" className="w-full gap-2 sm:w-auto">
           <Plus className="h-5 w-5" />
           Nova Transação
         </Button>

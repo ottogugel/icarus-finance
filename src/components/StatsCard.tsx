@@ -13,13 +13,13 @@ interface StatsCardProps {
 export function StatsCard({ title, value, icon: Icon, variant = 'default' }: StatsCardProps) {
   return (
     <Card className="overflow-hidden transition-all hover:shadow-lg">
-      <CardContent className="p-6">
+      <CardContent className="p-4 sm:p-6">
         <div className="flex items-center justify-between">
           <div className="space-y-1">
             <p className="text-sm font-medium text-muted-foreground">{title}</p>
             <p
               className={cn(
-                'text-2xl font-bold tracking-tight',
+                'break-words text-xl font-bold tracking-tight sm:text-2xl',
                 variant === 'success' && 'text-success',
                 variant === 'danger' && 'text-danger'
               )}
@@ -29,7 +29,7 @@ export function StatsCard({ title, value, icon: Icon, variant = 'default' }: Sta
           </div>
           <div
             className={cn(
-              'flex h-12 w-12 items-center justify-center rounded-xl',
+              'flex h-10 w-10 shrink-0 items-center justify-center rounded-lg sm:h-12 sm:w-12 sm:rounded-xl',
               variant === 'default' && 'bg-primary/10 text-primary',
               variant === 'success' && 'bg-success/10 text-success',
               variant === 'danger' && 'bg-danger/10 text-danger'

@@ -19,12 +19,12 @@ export function GoalCard({ goal, onDelete, onViewDetails }: GoalCardProps) {
   return (
     <Card className={isCompleted ? 'border-success/50 bg-success/5' : ''}>
       <CardHeader className="pb-3">
-        <div className="flex items-start justify-between">
-          <div className="flex items-center gap-2">
+        <div className="flex items-start justify-between gap-2">
+          <div className="flex min-w-0 items-center gap-2">
             {isCompleted && <Trophy className="h-5 w-5 text-success" />}
-            <CardTitle className="text-lg">{goal.name}</CardTitle>
+            <CardTitle className="break-words text-lg">{goal.name}</CardTitle>
           </div>
-          <div className="flex gap-1">
+          <div className="flex shrink-0 gap-1">
             <Button
               variant="ghost"
               size="icon"

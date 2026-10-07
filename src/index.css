@@ -50,6 +50,7 @@ All colors MUST be HSL.
     
     --shadow-card: 0 1px 3px 0 rgb(0 0 0 / 0.05), 0 1px 2px -1px rgb(0 0 0 / 0.05);
     --shadow-elevated: 0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.05);
+    --auth-panel: linear-gradient(145deg, hsl(142 76% 22%), hsl(215 25% 9%));
     
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
@@ -113,6 +114,7 @@ All colors MUST be HSL.
     
     --shadow-card: 0 1px 3px 0 rgb(0 0 0 / 0.3), 0 1px 2px -1px rgb(0 0 0 / 0.3);
     --shadow-elevated: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.3);
+    --auth-panel: linear-gradient(145deg, hsl(142 76% 17%), hsl(215 25% 6%));
   }
 }
 
@@ -123,5 +125,13 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground;
+    min-width: 320px;
+    overflow-x: hidden;
+  }
+}
+
+@layer utilities {
+  .bg-auth-panel {
+    background: var(--auth-panel);
   }
 }

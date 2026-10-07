@@ -83,11 +83,11 @@ const Transactions = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-5 sm:py-8">
         <div className="mb-6">
-          <div className="flex items-center justify-between mb-6">
+          <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <h1 className="text-3xl font-bold">Transações</h1>
+              <h1 className="text-2xl font-bold sm:text-3xl">Transações</h1>
               <p className="text-muted-foreground">Gerencie todas as suas transações</p>
             </div>
             <AddTransactionDialog onAdd={addTransaction} banks={banks} />
@@ -243,7 +243,7 @@ const Transactions = () => {
               Total de transações: <span className="font-medium text-foreground">{totalFiltered}</span>
             </div>
 
-            <div className="flex items-center gap-4">
+            <div className="flex flex-col gap-3 min-[380px]:flex-row min-[380px]:items-center sm:gap-4">
               <div className="flex items-center gap-2">
                 <Label htmlFor="items-per-page" className="text-sm text-muted-foreground whitespace-nowrap">
                   Exibir
@@ -273,7 +273,7 @@ const Transactions = () => {
                 >
                   <ChevronLeft className="h-4 w-4" />
                 </Button>
-                <span className="text-sm px-2">
+                <span className="whitespace-nowrap px-1 text-sm sm:px-2">
                   Página {page} de {totalPages}
                 </span>
                 <Button

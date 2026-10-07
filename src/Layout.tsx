@@ -25,28 +25,28 @@ export default function Layout() {
 
   return (
     <SidebarProvider>
-      <div className="flex min-h-screen w-full">
+      <div className="flex min-h-[100svh] w-full min-w-0">
         <AppSidebar />
-        <div className="flex-1 flex flex-col">
-          <header className="h-14 border-b bg-card/50 backdrop-blur-sm sticky top-0 z-10 flex items-center px-4 justify-between">
-            <SidebarTrigger />
-            <div className="flex items-center gap-3">
-              <div className="flex items-center gap-2">
+        <div className="flex min-w-0 flex-1 flex-col">
+          <header className="sticky top-0 z-10 flex h-14 items-center justify-between gap-2 border-b bg-card/80 px-3 backdrop-blur-sm sm:px-4">
+            <SidebarTrigger className="h-10 w-10 shrink-0" />
+            <div className="flex min-w-0 items-center gap-1 sm:gap-3">
+              <div className="flex min-w-0 items-center gap-2">
                 <UserCircle className="h-5 w-5" />
-                <span className="text-sm">{displayName || user.email}</span>
+                <span className="max-w-[130px] truncate text-sm sm:max-w-xs">{displayName || user.email}</span>
               </div>
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={signOut}
-                className="gap-2"
+                className="h-10 shrink-0 gap-2 px-2 sm:px-3"
               >
                 <LogOut className="h-4 w-4" />
-                Sair
+                <span className="hidden sm:inline">Sair</span>
               </Button>
             </div>
           </header>
-          <main className="flex-1">
+          <main className="min-w-0 flex-1 overflow-x-hidden">
             <Outlet />
           </main>
         </div>

@@ -78,22 +78,22 @@ export default function Banks() {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-5 sm:py-8">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-8">
           <div className="flex items-center gap-3">
             <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary text-primary-foreground">
               <Building2 className="h-6 w-6" />
             </div>
             <div>
-              <h1 className="text-3xl font-bold">Bancos & Contas</h1>
+              <h1 className="text-2xl font-bold sm:text-3xl">Bancos & Contas</h1>
               <p className="text-muted-foreground">Gerencie suas contas bancárias</p>
             </div>
           </div>
-          <div className="flex items-center gap-2">
-            <div className="flex items-center gap-2">
+          <div className="grid grid-cols-1 gap-2 min-[390px]:grid-cols-[1fr_auto] sm:flex sm:items-center">
+            <div className="flex min-w-0 items-center gap-2">
               <Calendar className="h-4 w-4 text-muted-foreground" />
               <Select value={selectedPeriod} onValueChange={setSelectedPeriod}>
-                <SelectTrigger className="w-[180px]">
+                <SelectTrigger className="w-full min-w-0 sm:w-[180px]">
                   <SelectValue placeholder="Selecione o período" />
                 </SelectTrigger>
                 <SelectContent>

@@ -110,38 +110,38 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-8">
-        <div className="flex items-center gap-3 mb-8">
-          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary text-primary-foreground">
+      <div className="container mx-auto px-4 py-5 sm:py-8">
+        <div className="mb-6 flex items-center gap-3 sm:mb-8">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground sm:h-12 sm:w-12 sm:rounded-xl">
             <Wallet className="h-6 w-6" />
           </div>
           <div>
-            <h1 className="text-3xl font-bold">Dashboard</h1>
+            <h1 className="text-2xl font-bold sm:text-3xl">Dashboard</h1>
             <p className="text-muted-foreground">Visão geral das suas finanças</p>
           </div>
         </div>
 
         {/* Main Stats */}
-        <div className="grid gap-4 grid-cols-2 md:grid-cols-3 lg:grid-cols-6 mb-8">
+        <div className="mb-6 grid grid-cols-1 gap-3 min-[380px]:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 sm:gap-4 sm:mb-8">
           <StatsCard title="Saldo" value={currentMonthStats.balance} icon={Wallet} variant="default" />
           <StatsCard title="Receitas" value={currentMonthStats.income} icon={TrendingUp} variant="success" />
           <StatsCard title="Despesas" value={currentMonthStats.expenses} icon={TrendingDown} variant="danger" />
           <StatsCard title="Gasto Médio" value={currentMonthStats.avgExpense} icon={BarChart3} variant="danger" />
           <Card className="overflow-hidden transition-all hover:shadow-lg">
-            <CardContent className="p-6">
+            <CardContent className="p-4 sm:p-6">
               <div className="flex items-center justify-between">
                 <div className="space-y-1">
                   <p className="text-sm font-medium text-muted-foreground">Transações</p>
                   <p className="text-2xl font-bold tracking-tight">{currentMonthStats.totalTransactions}</p>
                 </div>
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary sm:h-12 sm:w-12 sm:rounded-xl">
                   <Receipt className="h-6 w-6" />
                 </div>
               </div>
             </CardContent>
           </Card>
           <Card className="overflow-hidden transition-all hover:shadow-lg">
-            <CardContent className="p-6">
+            <CardContent className="p-4 sm:p-6">
               <div className="flex items-center justify-between">
                 <div className="space-y-1">
                   <p className="text-sm font-medium text-muted-foreground">% Economia</p>
@@ -151,7 +151,7 @@ const Index = () => {
                       : '0%'}
                   </p>
                 </div>
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary sm:h-12 sm:w-12 sm:rounded-xl">
                   <Target className="h-6 w-6" />
                 </div>
               </div>
@@ -163,11 +163,11 @@ const Index = () => {
         <div className="grid gap-6 lg:grid-cols-2 mb-6">
           {/* Monthly Evolution */}
           <Card>
-            <CardHeader>
-              <CardTitle>Evolução Mensal (6 meses)</CardTitle>
+            <CardHeader className="px-4 sm:px-6">
+              <CardTitle className="text-base sm:text-lg">Evolução Mensal (6 meses)</CardTitle>
             </CardHeader>
-            <CardContent>
-              <ResponsiveContainer width="100%" height={300}>
+            <CardContent className="px-1 sm:px-6">
+              <ResponsiveContainer width="100%" height={260}>
                 <BarChart data={monthlyEvolutionData}>
                   <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
                   <XAxis dataKey="month" className="text-xs" />
@@ -185,11 +185,11 @@ const Index = () => {
 
           {/* Daily Spending */}
           <Card>
-            <CardHeader>
-              <CardTitle>Gastos Diários do Mês</CardTitle>
+            <CardHeader className="px-4 sm:px-6">
+              <CardTitle className="text-base sm:text-lg">Gastos Diários do Mês</CardTitle>
             </CardHeader>
-            <CardContent>
-              <ResponsiveContainer width="100%" height={300}>
+            <CardContent className="px-1 sm:px-6">
+              <ResponsiveContainer width="100%" height={260}>
                 <LineChart data={dailySpendingData}>
                   <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
                   <XAxis dataKey="day" className="text-xs" interval="preserveStartEnd" />
