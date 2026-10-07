@@ -96,16 +96,16 @@ const CreditCards = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-8">
-        <div className="flex items-center justify-between mb-6">
+      <div className="container mx-auto px-4 py-5 sm:py-8">
+        <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h1 className="text-3xl font-bold">Cartões de Crédito</h1>
+            <h1 className="text-2xl font-bold sm:text-3xl">Cartões de Crédito</h1>
             <p className="text-muted-foreground">Gerencie suas faturas de cartão</p>
           </div>
 
           <Dialog open={addCardOpen} onOpenChange={setAddCardOpen}>
             <DialogTrigger asChild>
-              <Button><Plus className="h-4 w-4 mr-2" /> Novo Cartão</Button>
+              <Button className="w-full sm:w-auto"><Plus className="h-4 w-4 mr-2" /> Novo Cartão</Button>
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
@@ -116,7 +116,7 @@ const CreditCards = () => {
                   <Label>Nome</Label>
                   <Input placeholder="Ex: Santander" value={cardName} onChange={e => setCardName(e.target.value)} />
                 </div>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <div className="space-y-2">
                     <Label>Dia de Fechamento</Label>
                     <Input type="number" min="1" max="31" value={closingDay} onChange={e => setClosingDay(e.target.value)} />
@@ -149,19 +149,19 @@ const CreditCards = () => {
               onClick={() => navigate(`/credit-cards/${card.id}`)}
             >
               <CardContent className="pt-6">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
+                <div className="flex items-start justify-between gap-2">
+                  <div className="flex min-w-0 items-center gap-3">
                     <div className="h-10 w-10 rounded-full flex items-center justify-center" style={{ backgroundColor: card.color }}>
                       <CreditCardIcon className="h-5 w-5 text-white" />
                     </div>
-                    <div>
-                      <p className="font-semibold">{card.name}</p>
+                    <div className="min-w-0">
+                      <p className="truncate font-semibold">{card.name}</p>
                       <p className="text-xs text-muted-foreground">
                         Fecha dia {card.closing_day} · Vence dia {card.due_day}
                       </p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-1">
+                  <div className="flex shrink-0 items-center gap-1">
                     <Button
                       variant="ghost"
                       size="icon"
@@ -180,11 +180,11 @@ const CreditCards = () => {
                   </div>
                 </div>
                 {card.card_limit > 0 && (
-                  <div className="flex items-center gap-2 mt-2">
+                  <div className="mt-3 flex flex-col gap-1 border-t pt-3 min-[380px]:flex-row min-[380px]:items-center min-[380px]:gap-2">
                     <p className="text-xs text-muted-foreground">
                       Limite: {formatCurrency(card.card_limit)}
                     </p>
-                    <span className="text-xs text-muted-foreground">·</span>
+                    <span className="hidden text-xs text-muted-foreground min-[380px]:inline">·</span>
                     <p className={cn(
                       "text-xs font-medium",
                       (availableLimits[card.id] ?? card.card_limit) >= 0 ? "text-success" : "text-danger"
@@ -219,7 +219,7 @@ const CreditCards = () => {
                 <Label>Nome</Label>
                 <Input value={editCardName} onChange={e => setEditCardName(e.target.value)} />
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div className="space-y-2">
                   <Label>Dia de Fechamento</Label>
                   <Input type="number" min="1" max="31" value={editCardClosing} onChange={e => setEditCardClosing(e.target.value)} />

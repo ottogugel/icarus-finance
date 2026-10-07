@@ -58,24 +58,24 @@ export default function Settings() {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-8 max-w-5xl">
-        <div className="flex items-center gap-3 mb-8">
-          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary text-primary-foreground">
+      <div className="container mx-auto max-w-5xl px-4 py-5 sm:py-8">
+        <div className="mb-6 flex items-center gap-3 sm:mb-8">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground sm:h-12 sm:w-12 sm:rounded-xl">
             <SettingsIcon className="h-6 w-6" />
           </div>
           <div>
-            <h1 className="text-3xl font-bold">Configurações</h1>
+            <h1 className="text-2xl font-bold sm:text-3xl">Configurações</h1>
             <p className="text-muted-foreground">Gerencie suas preferências e informações</p>
           </div>
         </div>
 
         <Tabs defaultValue="profile" className="w-full">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="profile" className="gap-2">
+          <TabsList className="grid h-auto w-full grid-cols-2">
+            <TabsTrigger value="profile" className="gap-1 px-2 sm:gap-2">
               <User className="h-4 w-4" />
               Perfil
             </TabsTrigger>
-            <TabsTrigger value="preferences" className="gap-2">
+            <TabsTrigger value="preferences" className="gap-1 px-2 sm:gap-2">
               <Palette className="h-4 w-4" />
               Preferências
             </TabsTrigger>
@@ -117,7 +117,7 @@ export default function Settings() {
                       onChange={(e) => setName(e.target.value)}
                     />
                   </div>
-                  <Button type="submit" disabled={isSaving}>
+                  <Button type="submit" className="w-full sm:w-auto" disabled={isSaving}>
                     {isSaving ? 'Salvando...' : 'Salvar Alterações'}
                   </Button>
                 </form>
@@ -149,7 +149,7 @@ export default function Settings() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
-                <div className="flex items-center justify-between">
+                <div className="flex items-start justify-between gap-4">
                   <div className="space-y-0.5">
                     <Label htmlFor="dark-mode">Modo Escuro</Label>
                     <p className="text-sm text-muted-foreground">

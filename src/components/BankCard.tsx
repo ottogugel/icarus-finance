@@ -25,17 +25,17 @@ export function BankCard({ bank, currentBalance, onDelete, onEdit, showPeriodLab
         className="absolute top-0 left-0 w-full h-2"
         style={{ backgroundColor: bank.color }}
       />
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="text-lg font-bold flex items-center gap-2">
+      <CardHeader className="flex flex-row items-center justify-between gap-2 space-y-0 pb-2">
+        <CardTitle className="flex min-w-0 items-center gap-2 text-lg font-bold">
           <div
             className="w-10 h-10 rounded-full flex items-center justify-center"
             style={{ backgroundColor: bank.color }}
           >
             <Wallet className="h-5 w-5 text-white" />
           </div>
-          {bank.name}
+          <span className="truncate">{bank.name}</span>
         </CardTitle>
-        <div className="flex gap-1">
+        <div className="flex shrink-0 gap-1">
           <Button
             variant="ghost"
             size="icon"

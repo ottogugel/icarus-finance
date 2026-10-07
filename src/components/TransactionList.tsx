@@ -61,7 +61,37 @@ export function TransactionList({ transactions, onDelete, banks = [] }: Transact
 
   return (
     <Card>
-      <CardContent className="p-0">
+      <CardContent className="p-3 md:p-0">
+        <div className="space-y-3 md:hidden">
+          {transactions.map((transaction) => (
+            <div key={transaction.id} className="rounded-md border p-3">
+              <div className="flex items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <p className="truncate font-medium">{transaction.description}</p>
+                  <p className="mt-1 text-xs text-muted-foreground">
+                    {format(new Date(transaction.date), "dd/MM/yyyy", { locale: ptBR })} · {transaction.bank_id ? bankNameMap[transaction.bank_id] || 'Banco não encontrado' : 'Sem banco'}
+                  </p>
+                </div>
+                <Button variant="ghost" size="icon" aria-label={`Excluir ${transaction.description}`} onClick={() => onDelete(transaction.id)} className="h-10 w-10 shrink-0 text-muted-foreground hover:text-danger">
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              </div>
+              <div className="mt-3 flex items-end justify-between gap-3 border-t pt-3">
+                <div className="min-w-0">
+                  <p className="truncate text-xs text-muted-foreground">{categoryNameMap[transaction.category] || 'Sem categoria'}</p>
+                  <span className={cn('mt-1 inline-flex items-center gap-1 text-xs font-semibold', transaction.type === 'income' ? 'text-success' : 'text-danger')}>
+                    {transaction.type === 'income' ? <TrendingUp className="h-3 w-3" /> : <TrendingDown className="h-3 w-3" />}
+                    {transaction.type === 'income' ? 'Receita' : 'Despesa'}
+                  </span>
+                </div>
+                <p className={cn('whitespace-nowrap font-semibold', transaction.type === 'income' ? 'text-success' : 'text-danger')}>
+                  {transaction.type === 'income' ? '+' : '-'}{formatCurrency(transaction.amount)}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+        <div className="hidden overflow-x-auto md:block">
         <Table>
           <TableHeader>
             <TableRow>
@@ -124,6 +154,7 @@ export function TransactionList({ transactions, onDelete, banks = [] }: Transact
             ))}
           </TableBody>
         </Table>
+        </div>
       </CardContent>
     </Card>
   );
