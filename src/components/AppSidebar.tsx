@@ -45,7 +45,7 @@ export function AppSidebar() {
   const location = useLocation();
   const currentPath = location.pathname;
   const { displayName } = useProfile();
-  const { user, signOut } = useAuth();
+  const { signOut } = useAuth();
   const walletActive = walletItems.some((item) => currentPath.startsWith(item.url));
   const [walletOpen, setWalletOpen] = useState(true);
   useEffect(() => {
