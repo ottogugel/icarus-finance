@@ -52,7 +52,7 @@ export function AppSidebar() {
         isActive={item.url === "/" ? currentPath === "/" : currentPath.startsWith(item.url)}
         className={cn("h-11 gap-3 rounded-lg px-3 transition-colors motion-reduce:transition-none", nested && !collapsed && "pl-9")}
       >
-        <NavLink to={item.url} end={item.url === "/"} onClick={() => isMobile && setOpenMobile(false)}>
+        <NavLink to={item.url} aria-label={item.title} end={item.url === "/"} onClick={() => isMobile && setOpenMobile(false)}>
           <item.icon strokeWidth={1.7} />
           {!collapsed && <span>{item.title}</span>}
         </NavLink>
@@ -94,7 +94,7 @@ export function AppSidebar() {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton asChild tooltip="Minha conta" className="h-12 gap-3 rounded-lg px-2">
-              <NavLink to="/settings" onClick={() => isMobile && setOpenMobile(false)}>
+              <NavLink to="/settings" aria-label="Minha conta" onClick={() => isMobile && setOpenMobile(false)}>
                 <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-sidebar-accent font-semibold text-sidebar-accent-foreground">{displayName.trim().charAt(0).toUpperCase() || "U"}</span>
                 {!collapsed && <><span className="min-w-0 flex-1 truncate font-medium text-foreground">{displayName || "Minha conta"}</span><Settings className="h-4 w-4 shrink-0" /></>}
               </NavLink>
