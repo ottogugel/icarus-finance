@@ -45,7 +45,7 @@ export function AppSidebar() {
   const location = useLocation();
   const currentPath = location.pathname;
   const { displayName } = useProfile();
-  const { user, signOut } = useAuth();
+  const { signOut } = useAuth();
   const walletActive = walletItems.some((item) => currentPath.startsWith(item.url));
   const [walletOpen, setWalletOpen] = useState(true);
   useEffect(() => {
@@ -113,16 +113,6 @@ export function AppSidebar() {
                 sideOffset={8}
                 className="w-[calc(var(--sidebar-width)_-_1.5rem)] min-w-52"
               >
-                <div className="px-2 py-1.5">
-                  <p className="truncate text-sm font-medium">{displayName || "Minha conta"}</p>
-                  <p className="truncate text-xs text-muted-foreground">{user?.email}</p>
-                </div>
-                <DropdownMenuItem asChild>
-                  <NavLink to="/settings" className="cursor-pointer" onClick={() => isMobile && setOpenMobile(false)}>
-                    <Settings className="h-4 w-4" />
-                    <span>Configurações</span>
-                  </NavLink>
-                </DropdownMenuItem>
                 <DropdownMenuItem
                   className="cursor-pointer text-destructive focus:text-destructive"
                   onSelect={(event) => {
